@@ -1,0 +1,51 @@
+package mono.it.school.payments.entity;
+
+import lombok.*;
+import mono.it.school.payments.constants.PaymentStatus;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Table(name = "payments")
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class PaymentEntity {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    private UUID paymentID;
+
+    @Column(name = "template_id")
+    @Getter
+    @NonNull
+    private UUID templateID;
+
+    @Column(name = "card_number")
+    @Getter
+    private long cardNumber;
+
+    @Column(name = "payment_amount")
+    @Getter
+    private float paymentAmount;
+
+    @Column(name = "payment_status")
+    @Getter
+    @NonNull
+    private PaymentStatus paymentStatus;
+
+    @Column(name = "created_date_time")
+    @Getter
+    @NonNull
+    private LocalDateTime createdDateTime;
+
+    //TODO: Annotate this
+    @Column(name = "etl_date_time")
+    @Getter
+    @NonNull
+    private LocalDateTime etlDateTime;
+}
