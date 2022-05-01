@@ -16,7 +16,6 @@ public class PaymentEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private UUID paymentID;
 

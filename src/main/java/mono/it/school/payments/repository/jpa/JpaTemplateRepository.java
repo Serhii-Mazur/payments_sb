@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface JpaTemplateRepository extends JpaRepository<TemplateEntity, UUID> {
 
+    TemplateEntity findByTemplateName(String templateName);
 }

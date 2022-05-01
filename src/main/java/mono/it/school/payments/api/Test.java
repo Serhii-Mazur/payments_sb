@@ -18,18 +18,18 @@ import java.util.List;
 //@NoArgsConstructor
 public class Test {
 
-    private final UserService userService;
-    private final AddressService addressService;
-    private final TemplateService templateService;
-    private final PaymentService paymentService;
-
-    @Autowired
-    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService) {
-        this.userService = userService;
-        this.addressService = addressService;
-        this.templateService = templateService;
-        this.paymentService = paymentService;
-    }
+//    private final UserService userService;
+//    private final AddressService addressService;
+//    private final TemplateService templateService;
+//    private final PaymentService paymentService;
+//
+//    @Autowired
+//    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService) {
+//        this.userService = userService;
+//        this.addressService = addressService;
+//        this.templateService = templateService;
+//        this.paymentService = paymentService;
+//    }
 
 
     @EventListener(ApplicationReadyEvent.class)

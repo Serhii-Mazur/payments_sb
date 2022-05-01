@@ -22,15 +22,21 @@ public class TemplateRepositoryImpl implements TemplateRepository {
 
     @Override
     public Template save(Template template) {
-        TemplateEntity savedTemplate = jpaTemplateRepository.save(TemplateMapper.templateToEntity(template));
+//        TemplateEntity savedTemplate = jpaTemplateRepository.save(TemplateMapper.templateToEntity(template));
 
-        return TemplateMapper.entityToTemplate(savedTemplate);
+        return TemplateMapper.entityToTemplate(jpaTemplateRepository.save(TemplateMapper.templateToEntity(template)));
     }
 
     @Override
     public Template getById(UUID id) {
-        TemplateEntity templateFromDb = jpaTemplateRepository.getById(id);
+//        TemplateEntity templateFromDb = jpaTemplateRepository.getById(id);
 
-        return TemplateMapper.entityToTemplate(templateFromDb);
+        return TemplateMapper.entityToTemplate(jpaTemplateRepository.getById(id));
+    }
+
+    @Override
+    public Template getByTemplateName(String templateName) {
+
+        return TemplateMapper.entityToTemplate(jpaTemplateRepository.findByTemplateName(templateName));
     }
 }

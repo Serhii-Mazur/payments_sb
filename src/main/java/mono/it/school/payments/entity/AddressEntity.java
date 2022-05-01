@@ -14,7 +14,6 @@ public class AddressEntity {
 
     @Id
     @Column(name = "id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @NonNull
     private UUID addressID;

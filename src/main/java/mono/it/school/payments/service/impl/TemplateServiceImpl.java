@@ -25,5 +25,9 @@ public class TemplateServiceImpl implements TemplateService {
         templateRepository.save(template);
     }
 
+    @Override
+    public Template getByTemplateName(String templateName) {
 
+        return templateRepository.getByTemplateName(templateName);
+    }
 }

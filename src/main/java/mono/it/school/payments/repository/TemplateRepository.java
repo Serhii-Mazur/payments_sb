@@ -8,4 +8,6 @@ public interface TemplateRepository {
     Template save(Template template);
 
     Template getById(UUID id);
+
+    Template getByTemplateName(String templateName);
 }

@@ -14,7 +14,6 @@ public class TemplateEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     UUID templateID;
 
