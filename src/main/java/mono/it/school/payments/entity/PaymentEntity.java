@@ -33,6 +33,7 @@ public class PaymentEntity {
     private float paymentAmount;
 
     @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
     @Getter
     @NonNull
     private PaymentStatus paymentStatus;
