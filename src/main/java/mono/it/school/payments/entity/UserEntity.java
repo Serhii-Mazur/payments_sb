@@ -5,19 +5,19 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "mono")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 public class UserEntity {
 
-    @Id
     @Column(name = "full_name")
     @Getter
     @NonNull
     private String fullName;
 
-    @Column(name = "email")
+    @Id
+    @Column(name = "e_mail")
     @Getter
     @NonNull
     private String eMail;

@@ -8,6 +8,8 @@ import mono.it.school.payments.repository.jpa.JpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserRepositoryImpl implements UserRepository {
 
@@ -23,5 +25,12 @@ public class UserRepositoryImpl implements UserRepository {
         UserEntity savedUser = jpaUserRepository.save(UserMapper.userToEntity(user));
 
         return UserMapper.entityToUser(savedUser);
+    }
+
+    @Override
+    public User getById(String id) {
+        UserEntity userFromDb = jpaUserRepository.getById(id);
+
+        return UserMapper.entityToUser(userFromDb);
     }
 }

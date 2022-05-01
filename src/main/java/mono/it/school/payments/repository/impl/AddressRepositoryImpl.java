@@ -8,6 +8,10 @@ import mono.it.school.payments.repository.jpa.JpaAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 public class AddressRepositoryImpl implements AddressRepository {
 
@@ -23,5 +27,28 @@ public class AddressRepositoryImpl implements AddressRepository {
         AddressEntity savedAddress = jpaAddressRepository.save(AddressMapper.addressToEntity(address));
 
         return AddressMapper.entityToAddress(savedAddress);
+    }
+
+    @Override
+    public Address getById(UUID id) {
+        AddressEntity addressFromDb = jpaAddressRepository.getById(id);
+
+        return AddressMapper.entityToAddress(addressFromDb);
+    }
+
+
+    @Override
+    public Address getByAddress(String address) {
+
+        return AddressMapper.entityToAddress(jpaAddressRepository.findByAddress(address));
+    }
+
+    @Override
+    public List<Address> getAllByUserEmail(String email) {
+
+        return jpaAddressRepository.findAllByUserEmail(email)
+                .stream()
+                .map(AddressMapper::entityToAddress)
+                .collect(Collectors.toList());
     }
 }

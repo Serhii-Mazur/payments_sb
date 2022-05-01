@@ -1,0 +1,1 @@
+http://localhost:8080/user/add?fullName=test1&eMail=test1&phoneNumber=test1

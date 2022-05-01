@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "addresses", schema = "mono")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -14,8 +14,9 @@ public class AddressEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
+    @NonNull
     private UUID addressID;
 
     @Column(name = "address")

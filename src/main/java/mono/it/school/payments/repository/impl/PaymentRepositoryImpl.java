@@ -8,6 +8,8 @@ import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class PaymentRepositoryImpl implements PaymentRepository {
 
@@ -23,5 +25,12 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         PaymentEntity savedPayment = jpaPaymentRepository.save(PaymentMapper.paymentToEntity(payment));
 
         return PaymentMapper.entityToPayment(savedPayment);
+    }
+
+    @Override
+    public Payment getById(UUID id) {
+        PaymentEntity paymentFromDb = jpaPaymentRepository.getById(id);
+
+        return PaymentMapper.entityToPayment(paymentFromDb);
     }
 }

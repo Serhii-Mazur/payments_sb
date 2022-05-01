@@ -8,6 +8,8 @@ import mono.it.school.payments.repository.jpa.JpaTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class TemplateRepositoryImpl implements TemplateRepository {
 
@@ -23,5 +25,12 @@ public class TemplateRepositoryImpl implements TemplateRepository {
         TemplateEntity savedTemplate = jpaTemplateRepository.save(TemplateMapper.templateToEntity(template));
 
         return TemplateMapper.entityToTemplate(savedTemplate);
+    }
+
+    @Override
+    public Template getById(UUID id) {
+        TemplateEntity templateFromDb = jpaTemplateRepository.getById(id);
+
+        return TemplateMapper.entityToTemplate(templateFromDb);
     }
 }

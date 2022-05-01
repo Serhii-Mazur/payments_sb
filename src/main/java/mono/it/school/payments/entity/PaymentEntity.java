@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments")
+@Table(name = "payments", schema = "mono")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -43,7 +43,6 @@ public class PaymentEntity {
     @NonNull
     private LocalDateTime createdDateTime;
 
-    //TODO: Annotate this
     @Column(name = "etl_date_time")
     @Getter
     @NonNull
