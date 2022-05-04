@@ -6,6 +6,8 @@ import mono.it.school.payments.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
@@ -19,5 +21,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void save(Payment payment) { //TODO: Rewrite method to return boolean
         paymentRepository.save(payment);
+    }
+
+    @Override
+    public List<Payment> getByStatus(String status) {
+
+        return paymentRepository.getByStatus(status);
     }
 }
