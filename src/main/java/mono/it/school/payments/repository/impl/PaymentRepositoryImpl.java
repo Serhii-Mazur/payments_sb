@@ -8,7 +8,9 @@ import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentRepositoryImpl implements PaymentRepository {
@@ -32,5 +34,14 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         PaymentEntity paymentFromDb = jpaPaymentRepository.getById(id);
 
         return PaymentMapper.entityToPayment(paymentFromDb);
+    }
+
+    @Override
+    public List<Payment> getByStatus(String status) {
+
+        return jpaPaymentRepository.findAllByStatus(status)
+                .stream()
+                .map(PaymentMapper::entityToPayment)
+                .collect(Collectors.toList());
     }
 }
