@@ -39,7 +39,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     @Override
     public List<Payment> getByStatus(String status) {
 
-        return jpaPaymentRepository.findAllByStatus(status)
+        return jpaPaymentRepository.findAllByPaymentStatus(status)
                 .stream()
                 .map(PaymentMapper::entityToPayment)
                 .collect(Collectors.toList());

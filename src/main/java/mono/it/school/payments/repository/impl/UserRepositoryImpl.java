@@ -1,5 +1,6 @@
 package mono.it.school.payments.repository.impl;
 
+import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.domain.User;
 import mono.it.school.payments.entity.UserEntity;
 import mono.it.school.payments.mapper.UserMapper;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Log4j2
 @Service
 public class UserRepositoryImpl implements UserRepository {
 
@@ -23,6 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         UserEntity savedUser = jpaUserRepository.save(UserMapper.userToEntity(user));
+        log.info("User saved: ", savedUser);
 
         return UserMapper.entityToUser(savedUser);
     }

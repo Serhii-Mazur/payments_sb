@@ -2,14 +2,14 @@ package mono.it.school.payments.controller;
 
 import mono.it.school.payments.domain.Address;
 import mono.it.school.payments.service.AddressService;
+import mono.it.school.payments.validation.AddressValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping(value = "/address")
 public class AddressController {
 
     private final AddressService addressService;
@@ -28,9 +28,12 @@ public class AddressController {
 //        return "return/add";
 //    }
 
-    @PostMapping("/address/add")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PostMapping("/add")
+    @ResponseBody
+//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addAddress(Address address) {
-        addressService.save(address);
+        if(AddressValidation.validate(address)) {
+            addressService.save(address);
+        }
     }
 }
