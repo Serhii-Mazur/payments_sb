@@ -18,6 +18,7 @@ import java.util.List;
 
 @Configuration
 public class ConfigurerAdapter implements WebMvcConfigurer {
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.addAll(createMessageConverters());

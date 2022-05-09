@@ -19,8 +19,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void save(Payment payment) { //TODO: Rewrite method to return boolean
-        paymentRepository.save(payment);
+    public Payment save(Payment payment) { //TODO: Rewrite method to return boolean
+        return paymentRepository.save(payment);
     }
 
     @Override
