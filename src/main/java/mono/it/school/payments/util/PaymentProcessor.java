@@ -32,8 +32,6 @@ public class PaymentProcessor {
 
     @Scheduled(cron = "${cron.everysecond.bankdays}")
     public void execute() {
-//        System.out.println("Thread: " + Thread.currentThread().getName());
-
         handleNewPayments();
     }
 

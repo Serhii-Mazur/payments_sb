@@ -9,7 +9,9 @@ import mono.it.school.payments.repository.jpa.JpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -20,6 +22,15 @@ public class UserRepositoryImpl implements UserRepository {
     @Autowired
     public UserRepositoryImpl(JpaUserRepository jpaUserRepository) {
         this.jpaUserRepository = jpaUserRepository;
+    }
+
+    @Override
+    public List<User> getAll() {
+
+        return jpaUserRepository.findAll()
+                .stream()
+                .map(UserMapper::entityToUser)
+                .collect(Collectors.toList());
     }
 
     @Override
