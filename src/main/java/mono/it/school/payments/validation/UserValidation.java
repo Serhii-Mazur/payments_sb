@@ -9,7 +9,7 @@ public class UserValidation extends AbstractDomainEntityValidation {
 
     @SneakyThrows
     public static boolean validate(User user) {
-        if (isEmpty(user.getEMail())) {
+        if (isEmpty(user.getEmail())) {
             throwValidationException(getExceptionMessage("E-mail"));
         }
         if (isEmpty(user.getFullName())) {

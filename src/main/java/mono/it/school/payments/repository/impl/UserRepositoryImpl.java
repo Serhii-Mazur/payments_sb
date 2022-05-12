@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -34,17 +33,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User getById(String id) {
+        UserEntity userFromDb = jpaUserRepository.getById(id);
+
+        return UserMapper.entityToUser(userFromDb);
+    }
+
+    @Override
+    public User getByEmail(String eMail) {
+        UserEntity userFromDb = jpaUserRepository.getByEmail(eMail);
+
+        return UserMapper.entityToUser(userFromDb);
+    }
+
+    @Override
     public User save(User user) {
         UserEntity savedUser = jpaUserRepository.save(UserMapper.userToEntity(user));
         log.info("User saved: ", savedUser);
 
         return UserMapper.entityToUser(savedUser);
-    }
-
-    @Override
-    public User getById(String id) {
-        UserEntity userFromDb = jpaUserRepository.getById(id);
-
-        return UserMapper.entityToUser(userFromDb);
     }
 }

@@ -9,7 +9,7 @@ public class User extends AbstractDomainEntity {
     private final String fullName;
 
     @NonNull
-    private final String eMail;
+    private final String email;
 
     @NonNull
     private final String phoneNumber;

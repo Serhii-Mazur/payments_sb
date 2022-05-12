@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public User save(User user) { //TODO: Rewrite method to return boolean or User
         if (exists(user)) {
-            throw new UserServiceException("User with e-mail [" + user.getEMail() + "] is already exists!");
+            throw new UserServiceException("User with e-mail [" + user.getEmail() + "] is already exists!");
         }
 
         return userRepository.save(user);
@@ -35,21 +35,15 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public User update(User user) {
         if (!exists(user)) {
-            throw new UserServiceException("User with e-mail [" + user.getEMail() + "] doesn't exist!");
+            throw new UserServiceException("User with e-mail [" + user.getEmail() + "] doesn't exist!");
         }
         return userRepository.save(user);
     }
 
     private boolean exists(User user) {
-        boolean result = false;
-        List<User> userList = userRepository.getAll();
-        for (User userFromDb : userList) {
-            if (user.getEMail().equals(userFromDb.getEMail())) {
-                result = true;
-            }
-        }
+        User userFromDb = userRepository.getByEmail(user.getEmail());
 
-        return result;
+        return user.getEmail().equals(userFromDb.getEmail());
     }
 
     public class UserServiceException extends Exception {

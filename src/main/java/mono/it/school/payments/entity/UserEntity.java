@@ -17,10 +17,10 @@ public class UserEntity {
     private String fullName;
 
     @Id
-    @Column(name = "e_mail")
+    @Column(name = "email")
     @Getter
     @NonNull
-    private String eMail;
+    private String email;
 
     @Column(name = "phone_number")
     @Getter

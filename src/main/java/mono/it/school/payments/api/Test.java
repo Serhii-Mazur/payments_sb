@@ -1,9 +1,10 @@
 package mono.it.school.payments.api;
 
 import mono.it.school.payments.constants.PaymentStatus;
-import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.entity.PaymentEntity;
+import mono.it.school.payments.entity.UserEntity;
 import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
+import mono.it.school.payments.repository.jpa.JpaUserRepository;
 import mono.it.school.payments.service.AddressService;
 import mono.it.school.payments.service.PaymentService;
 import mono.it.school.payments.service.TemplateService;
@@ -23,14 +24,16 @@ public class Test {
     private final AddressService addressService;
     private final TemplateService templateService;
     private final PaymentService paymentService;
+    private final JpaUserRepository jpaUserRepository;
     private final JpaPaymentRepository jpaPaymentRepository;
 
     @Autowired
-    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService, JpaPaymentRepository jpaPaymentRepository) {
+    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService, JpaUserRepository jpaUserRepository, JpaPaymentRepository jpaPaymentRepository) {
         this.userService = userService;
         this.addressService = addressService;
         this.templateService = templateService;
         this.paymentService = paymentService;
+        this.jpaUserRepository = jpaUserRepository;
         this.jpaPaymentRepository = jpaPaymentRepository;
     }
 
@@ -39,6 +42,9 @@ public class Test {
     private void eventTest() {
         System.out.println("Application started!");
 
+//        userService.save(new User("test", "test", "test"));
+
+        UserEntity byEmail = jpaUserRepository.getByEmail("123");
         List<PaymentEntity> paymentEntities = jpaPaymentRepository.findAllByPaymentStatus(PaymentStatus.NEW);
         for (PaymentEntity paymentEntity : paymentEntities) {
             System.out.println(paymentEntity.getPaymentID());
@@ -50,7 +56,6 @@ public class Test {
 //        }
 
 
-//        userService.save(new User("test", "test", "test"));
 //        addressService.save(new Address(null, "test address", "test"));
 ////        Template testTemplate = new Template(null, "")
 //        List<Address> addressList = addressService.getByAddress("test address");

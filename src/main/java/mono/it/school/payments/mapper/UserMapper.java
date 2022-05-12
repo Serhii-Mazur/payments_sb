@@ -7,11 +7,11 @@ public class UserMapper {
 
     public static UserEntity userToEntity(User user) {
 
-        return new UserEntity(user.getFullName(), user.getEMail(), user.getPhoneNumber());
+        return new UserEntity(user.getFullName(), user.getEmail(), user.getPhoneNumber());
     }
 
     public static User entityToUser(UserEntity userEntity) {
 
-        return new User(userEntity.getFullName(), userEntity.getEMail(), userEntity.getPhoneNumber());
+        return new User(userEntity.getFullName(), userEntity.getEmail(), userEntity.getPhoneNumber());
     }
 }

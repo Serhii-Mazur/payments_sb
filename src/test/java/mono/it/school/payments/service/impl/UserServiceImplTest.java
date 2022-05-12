@@ -4,6 +4,7 @@ import mono.it.school.payments.domain.User;
 import mono.it.school.payments.repository.UserRepository;
 import mono.it.school.payments.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,43 +35,51 @@ class UserServiceImplTest {
         userService = new UserServiceImpl(userRepository);
     }
 
-    @ParameterizedTest
-    @MethodSource("getUsers")
-    void exists_shouldReturnTrueIfUserExists(List<User> existingUsers) {
-
+//    @Test
+//    @MethodSource("getUsers")
+//    void save_ShouldReturnUserIfUserSaved(List<User> existingUsers) {
+//
 //        doReturn(existingUsers).when(userRepository).getAll();
+//        User user = new User("Serhii Mazur",
+//                "qwerty@cmail.com",
+//                "+380456123789");
+//        doReturn(user).when(userService).save(user);
+//        User actual = userService.save(user);
+//
+//    }
 
-        User user = new User("John Doe",
-                "johndoe@jmail.com",
-                "+380123456789");
-
-        assertTrue(existingUsers.contains(user));
-//        assertThat(user.getFullName()).isEqualTo("John Doe");
-//        assertThat(user.getEMail()).isEqualTo("johndoe@jmail.com");
-//        assertThat(user.getPhoneNumber()).isEqualTo("+380123456789");
-    }
-
-    @ParameterizedTest
-    @MethodSource("getUsers")
-    void exists_shouldReturnFalseIfUserNotExists(List<User> existingUsers) {
-
+    @Test
+//    @MethodSource("getEmptyUserList")
+    void save_ShouldReturnUserIfUserSaved() {
         User user = new User("Serhii Mazur",
                 "qwerty@cmail.com",
                 "+380456123789");
 
-        assertFalse(existingUsers.contains(user));
+        doReturn(null).when(userRepository).getByEmail(user.getEmail());
+        doReturn(user).when(userService).save(user);
+
+        User actual = userService.save(user);
+
+        assertThat(actual.getFullName()).isEqualTo("Serhii Mazur");
+        assertThat(actual.getEmail()).isEqualTo("qwerty@cmail.com");
+        assertThat(actual.getPhoneNumber()).isEqualTo("+380456123789");
+    }
+//    @Test
+//    @MethodSource("getUsers")
+//    void save_ShouldThrowExceptionIfUserExists(List<User> existingUsers) {
+//
+//    }
+
+    private static Stream<Arguments> getEmptyUserList() {
+
+        return Stream.of(Arguments.of(Collections.EMPTY_LIST));
     }
 
-    @ParameterizedTest
-    @MethodSource("getUsers")
-    void save_ShouldReturnUserIfUserSaved(List<User> existingUsers) {
+    private static Stream<Arguments> getSingleUser() {
 
-    }
-
-    @ParameterizedTest
-    @MethodSource("getUsers")
-    void save_ShouldThrowExceptionIfUserExists(List<User> existingUsers) {
-
+        return Stream.of(Arguments.of(new User("Serhii Mazur",
+                "qwerty@cmail.com",
+                "+380456123789")));
     }
 
     private static Stream<Arguments> getUsers() {
@@ -78,10 +88,10 @@ class UserServiceImplTest {
                 "johndoe@jmail.com",
                 "+380123456789"));
         userList.add(new User("Sarah Connor",
-                "johndoe@jmail.com",
+                "sconnor@jmail.com",
                 "+380987456123"));
         userList.add(new User("Sherlock Holmes",
-                "johndoe@jmail.com",
+                "sherlock@jmail.com",
                 "+380654987321"));
 
         return Stream.of(Arguments.of(userList));
