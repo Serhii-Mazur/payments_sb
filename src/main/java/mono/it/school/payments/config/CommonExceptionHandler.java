@@ -1,5 +1,6 @@
 package mono.it.school.payments.config;
 
+import mono.it.school.payments.service.impl.UserServiceImpl;
 import mono.it.school.payments.validation.AbstractDomainEntityValidation;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,17 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody
     public Map<String, String> handleValidationException(AbstractDomainEntityValidation.ValidationException e) {
+
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+
+        return response;
+    }
+
+    @ExceptionHandler(UserServiceImpl.UserServiceException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
+    public Map<String, String> handleUserServiceException(UserServiceImpl.UserServiceException e) {
 
         Map<String, String> response = new HashMap<>();
         response.put("error", e.getMessage());

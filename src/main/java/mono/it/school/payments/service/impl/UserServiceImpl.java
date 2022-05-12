@@ -40,10 +40,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public List<User> getAll() {
+
+        return userRepository.getAll();
+    }
+
     private boolean exists(User user) {
         User userFromDb = userRepository.getByEmail(user.getEmail());
 
-        return user.getEmail().equals(userFromDb.getEmail());
+        return userFromDb != null;
     }
 
     public class UserServiceException extends Exception {

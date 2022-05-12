@@ -30,6 +30,15 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
+    public List<Address> getAll() {
+
+        return jpaAddressRepository.findAll()
+                .stream()
+                .map(AddressMapper::entityToAddress)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Address getById(UUID id) {
         AddressEntity addressFromDb = jpaAddressRepository.getById(id);
 
@@ -44,7 +53,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public List<Address> getAllByUserEmail(String email) {
+    public List<Address> getByUserEmail(String email) {
 
         return jpaAddressRepository.findAllByUserEmail(email)
                 .stream()

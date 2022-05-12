@@ -1,6 +1,7 @@
 package mono.it.school.payments.api;
 
 import mono.it.school.payments.constants.PaymentStatus;
+import mono.it.school.payments.domain.User;
 import mono.it.school.payments.entity.PaymentEntity;
 import mono.it.school.payments.entity.UserEntity;
 import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
@@ -42,13 +43,16 @@ public class Test {
     private void eventTest() {
         System.out.println("Application started!");
 
+        List<User> all = userService.getAll();
+        System.out.println(all.size());
+
 //        userService.save(new User("test", "test", "test"));
 
-        UserEntity byEmail = jpaUserRepository.getByEmail("123");
-        List<PaymentEntity> paymentEntities = jpaPaymentRepository.findAllByPaymentStatus(PaymentStatus.NEW);
-        for (PaymentEntity paymentEntity : paymentEntities) {
-            System.out.println(paymentEntity.getPaymentID());
-        }
+//        UserEntity byEmail = jpaUserRepository.getByEmail("123");
+//        List<PaymentEntity> paymentEntities = jpaPaymentRepository.findAllByPaymentStatus(PaymentStatus.NEW);
+//        for (PaymentEntity paymentEntity : paymentEntities) {
+//            System.out.println(paymentEntity.getPaymentID());
+//        }
 //        System.out.println(templateService.getByTemplateName("test").getTemplateID());
 
 //        for (Payment payment : paymentService.getByStatus("NEW")) {

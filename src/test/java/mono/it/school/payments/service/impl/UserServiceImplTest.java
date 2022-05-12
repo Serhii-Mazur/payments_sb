@@ -19,14 +19,12 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
     private UserRepository userRepository;
-
-
     private UserService userService;
 
     @BeforeEach
@@ -35,28 +33,14 @@ class UserServiceImplTest {
         userService = new UserServiceImpl(userRepository);
     }
 
-//    @Test
-//    @MethodSource("getUsers")
-//    void save_ShouldReturnUserIfUserSaved(List<User> existingUsers) {
-//
-//        doReturn(existingUsers).when(userRepository).getAll();
-//        User user = new User("Serhii Mazur",
-//                "qwerty@cmail.com",
-//                "+380456123789");
-//        doReturn(user).when(userService).save(user);
-//        User actual = userService.save(user);
-//
-//    }
-
     @Test
-//    @MethodSource("getEmptyUserList")
     void save_ShouldReturnUserIfUserSaved() {
         User user = new User("Serhii Mazur",
                 "qwerty@cmail.com",
                 "+380456123789");
 
         doReturn(null).when(userRepository).getByEmail(user.getEmail());
-        doReturn(user).when(userService).save(user);
+        doReturn(user).when(userRepository).save(user);
 
         User actual = userService.save(user);
 
@@ -64,24 +48,86 @@ class UserServiceImplTest {
         assertThat(actual.getEmail()).isEqualTo("qwerty@cmail.com");
         assertThat(actual.getPhoneNumber()).isEqualTo("+380456123789");
     }
-//    @Test
-//    @MethodSource("getUsers")
-//    void save_ShouldThrowExceptionIfUserExists(List<User> existingUsers) {
-//
-//    }
+
+    @Test
+    void save_ShouldThrowExceptionIfUserExists() {
+        User user = new User("Serhii Mazur",
+                "qwerty@cmail.com",
+                "+380456123789");
+
+        doReturn(user).when(userRepository).getByEmail(user.getEmail());
+
+        UserServiceImpl.UserServiceException thrown = assertThrows(UserServiceImpl.UserServiceException.class,
+                () -> userService.save(user));
+
+        assertNotNull(thrown.getMessage());
+    }
+
+    @Test
+    void update_ShouldReturnUserIfUserUpdated() {
+        User user = new User("Serhii Mazur",
+                "qwerty@cmail.com",
+                "+380456123789");
+
+        doReturn(user).when(userRepository).getByEmail(user.getEmail());
+        doReturn(user).when(userRepository).save(user);
+
+        User actual = userService.update(user);
+
+        assertThat(actual.getFullName()).isEqualTo("Serhii Mazur");
+        assertThat(actual.getEmail()).isEqualTo("qwerty@cmail.com");
+        assertThat(actual.getPhoneNumber()).isEqualTo("+380456123789");
+    }
+
+    @Test
+    void update_ShouldThrowExceptionIfUserDoesNotExist() {
+        User user = new User("Serhii Mazur",
+                "qwerty@cmail.com",
+                "+380456123789");
+
+        doReturn(null).when(userRepository).getByEmail(user.getEmail());
+
+        UserServiceImpl.UserServiceException thrown = assertThrows(UserServiceImpl.UserServiceException.class,
+                () -> userService.update(user));
+
+        assertNotNull(thrown.getMessage());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getEmptyUserList")
+    void getAll_ShouldReturnEmptyUserList(List<User> emptyUserList) {
+
+        doReturn(emptyUserList).when(userRepository).getAll();
+        List<User> actual = userService.getAll();
+
+        assertThat(actual.isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getUsers")
+    void getAll_ShouldReturnUserList(List<User> existingUsers) {
+
+        doReturn(existingUsers).when(userRepository).getAll();
+
+        List<User> actual = userService.getAll();
+
+        assertFalse(actual.isEmpty());
+        assertThat(actual.size()).isEqualTo(existingUsers.size());
+        assertThat(actual.size()).isEqualTo(3);
+    }
 
     private static Stream<Arguments> getEmptyUserList() {
 
         return Stream.of(Arguments.of(Collections.EMPTY_LIST));
     }
 
-    private static Stream<Arguments> getSingleUser() {
-
-        return Stream.of(Arguments.of(new User("Serhii Mazur",
-                "qwerty@cmail.com",
-                "+380456123789")));
-    }
-
+    //    private static Stream<Arguments> getSingleUser() {
+//
+//        return Stream.of(Arguments.of(new User("Serhii Mazur",
+//                "qwerty@cmail.com",
+//                "+380456123789")));
+//    }
+//
     private static Stream<Arguments> getUsers() {
         List<User> userList = new ArrayList<>();
         userList.add(new User("John Doe",

@@ -8,9 +8,11 @@ import java.util.UUID;
 public interface AddressRepository {
     Address save(Address address);
 
+    List<Address> getAll();
+
     Address getById(UUID id);
 
     Address getByAddress(String address);
 
-    List<Address> getAllByUserEmail(String email);
+    List<Address> getByUserEmail(String email);
 }
