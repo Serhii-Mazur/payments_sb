@@ -1,8 +1,9 @@
 package mono.it.school.payments.api;
 
-import mono.it.school.payments.domain.Address;
-import mono.it.school.payments.domain.Template;
-import mono.it.school.payments.domain.User;
+import mono.it.school.payments.constants.PaymentStatus;
+import mono.it.school.payments.domain.Payment;
+import mono.it.school.payments.entity.PaymentEntity;
+import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
 import mono.it.school.payments.service.AddressService;
 import mono.it.school.payments.service.PaymentService;
 import mono.it.school.payments.service.TemplateService;
@@ -18,23 +19,37 @@ import java.util.List;
 //@NoArgsConstructor
 public class Test {
 
-//    private final UserService userService;
-//    private final AddressService addressService;
-//    private final TemplateService templateService;
-//    private final PaymentService paymentService;
-//
-//    @Autowired
-//    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService) {
-//        this.userService = userService;
-//        this.addressService = addressService;
-//        this.templateService = templateService;
-//        this.paymentService = paymentService;
-//    }
+    private final UserService userService;
+    private final AddressService addressService;
+    private final TemplateService templateService;
+    private final PaymentService paymentService;
+    private final JpaPaymentRepository jpaPaymentRepository;
+
+    @Autowired
+    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService, JpaPaymentRepository jpaPaymentRepository) {
+        this.userService = userService;
+        this.addressService = addressService;
+        this.templateService = templateService;
+        this.paymentService = paymentService;
+        this.jpaPaymentRepository = jpaPaymentRepository;
+    }
 
 
     @EventListener(ApplicationReadyEvent.class)
     private void eventTest() {
         System.out.println("Application started!");
+
+        List<PaymentEntity> paymentEntities = jpaPaymentRepository.findAllByPaymentStatus(PaymentStatus.NEW);
+        for (PaymentEntity paymentEntity : paymentEntities) {
+            System.out.println(paymentEntity.getPaymentID());
+        }
+//        System.out.println(templateService.getByTemplateName("test").getTemplateID());
+
+//        for (Payment payment : paymentService.getByStatus("NEW")) {
+//            System.out.println(payment.getPaymentID());
+//        }
+
+
 //        userService.save(new User("test", "test", "test"));
 //        addressService.save(new Address(null, "test address", "test"));
 ////        Template testTemplate = new Template(null, "")

@@ -8,6 +8,8 @@ import mono.it.school.payments.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Log4j2
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @SneakyThrows
     public User save(User user) { //TODO: Rewrite method to return boolean or User
-        if (isExists(user)) {
+        if (exists(user)) {
             throw new UserServiceException("User with e-mail [" + user.getEMail() + "] is already exists!");
         }
 
@@ -32,15 +34,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @SneakyThrows
     public User update(User user) {
-        if (!isExists(user)) {
+        if (!exists(user)) {
             throw new UserServiceException("User with e-mail [" + user.getEMail() + "] doesn't exist!");
         }
         return userRepository.save(user);
     }
 
-    private boolean isExists(User user) {
+    private boolean exists(User user) {
         boolean result = false;
-        for (User userFromDb : userRepository.getAll()) {
+        List<User> userList = userRepository.getAll();
+        for (User userFromDb : userList) {
             if (user.getEMail().equals(userFromDb.getEMail())) {
                 result = true;
             }

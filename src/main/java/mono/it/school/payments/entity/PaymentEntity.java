@@ -1,14 +1,19 @@
 package mono.it.school.payments.entity;
 
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import lombok.*;
 import mono.it.school.payments.constants.PaymentStatus;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments", schema = "mono")
+@Table(name = "payments", schema = "mono", indexes = {
+        @Index(name = "idx_paymententity", columnList = "payment_status")
+})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -32,8 +37,9 @@ public class PaymentEntity {
     @Getter
     private float paymentAmount;
 
-    @Column(name = "payment_status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
+//    @Type(type = "pgsql_enum")
     @Getter
     @NonNull
     private PaymentStatus paymentStatus;

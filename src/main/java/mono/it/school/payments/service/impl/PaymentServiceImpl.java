@@ -1,5 +1,6 @@
 package mono.it.school.payments.service.impl;
 
+import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.repository.PaymentRepository;
 import mono.it.school.payments.service.PaymentService;
@@ -24,8 +25,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> getByStatus(String status) {
+    public List<Payment> getByStatus(PaymentStatus status) {
 
         return paymentRepository.getByStatus(status);
+    }
+
+    @Override
+    public List<Payment> getAll() {
+
+        return paymentRepository.getAll();
     }
 }

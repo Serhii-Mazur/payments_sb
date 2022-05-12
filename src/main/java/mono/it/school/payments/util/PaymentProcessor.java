@@ -21,36 +21,35 @@ import java.util.Random;
 @EnableAsync
 public class PaymentProcessor {
 
-    private final Random random;
     private final PaymentService paymentService;
 
     @Autowired
-    public PaymentProcessor(Random random, PaymentService paymentService) {
-        this.random = random;
+    public PaymentProcessor(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 
     @Scheduled(cron = "${cron.everysecond.bankdays}")
     public void execute() {
-        handleNewPayments();
+//        handleNewPayments();
     }
 
     @Async
     public List<Payment> handleNewPayments() {
-        List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW.name());
+        List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW);
         List<Payment> handledPayments = new ArrayList<>();
 
-        for (Payment payment : newPayments) {
-            Payment handledPayment = generateNewStatus(payment);
-            if (handledPayment.getPaymentStatus() != PaymentStatus.NEW) {
-                handledPayments.add(paymentService.save(handledPayment));
-            }
-        }
+//        for (Payment payment : newPayments) {
+//            Payment handledPayment = generateNewStatus(payment);
+//            if (handledPayment.getPaymentStatus() != PaymentStatus.NEW) {
+//                handledPayments.add(paymentService.save(handledPayment));
+//            }
+//        }
 
         return handledPayments;
     }
 
     private Payment generateNewStatus(Payment payment) {
+        Random random = new Random();
         Payment result = payment;
         LocalDateTime createdDateTime = payment.getCreatedDateTime();
         long lag = ChronoUnit.SECONDS.between(createdDateTime, LocalDateTime.now().withNano(0));

@@ -1,5 +1,6 @@
 package mono.it.school.payments.repository.impl;
 
+import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.entity.PaymentEntity;
 import mono.it.school.payments.mapper.PaymentMapper;
@@ -30,6 +31,15 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
+    public List<Payment> getAll() {
+
+        return jpaPaymentRepository.findAll()
+                .stream()
+                .map(PaymentMapper::entityToPayment)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Payment getById(UUID id) {
         PaymentEntity paymentFromDb = jpaPaymentRepository.getById(id);
 
@@ -37,7 +47,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public List<Payment> getByStatus(String status) {
+    public List<Payment> getByStatus(PaymentStatus status) {
 
         return jpaPaymentRepository.findAllByPaymentStatus(status)
                 .stream()

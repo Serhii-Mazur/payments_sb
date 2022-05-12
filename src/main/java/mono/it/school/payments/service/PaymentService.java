@@ -1,5 +1,6 @@
 package mono.it.school.payments.service;
 
+import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 
 import java.util.List;
@@ -7,5 +8,7 @@ import java.util.List;
 public interface PaymentService {
     Payment save(Payment payment);
 
-    List<Payment> getByStatus(String status);
+    List<Payment> getByStatus(PaymentStatus status);
+
+    List<Payment> getAll();
 }
