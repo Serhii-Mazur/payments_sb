@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,7 +56,7 @@ class UserServiceImplTest {
                 "qwerty@cmail.com",
                 "+380456123789");
 
-        doReturn(user).when(userRepository).getByEmail(user.getEmail());
+        doReturn(user).when(userRepository).getByEmail(eq("qwerty@cmail.com"));
 
         UserServiceImpl.UserServiceException thrown = assertThrows(UserServiceImpl.UserServiceException.class,
                 () -> userService.save(user));
@@ -113,7 +114,7 @@ class UserServiceImplTest {
 
         assertFalse(actual.isEmpty());
         assertThat(actual.size()).isEqualTo(existingUsers.size());
-        assertThat(actual.size()).isEqualTo(3);
+//        assertThat(actual.size()).isEqualTo(3);
     }
 
     private static Stream<Arguments> getEmptyUserList() {
@@ -121,7 +122,7 @@ class UserServiceImplTest {
         return Stream.of(Arguments.of(Collections.EMPTY_LIST));
     }
 
-    //    private static Stream<Arguments> getSingleUser() {
+//    private static Stream<Arguments> getSingleUser() {
 //
 //        return Stream.of(Arguments.of(new User("Serhii Mazur",
 //                "qwerty@cmail.com",

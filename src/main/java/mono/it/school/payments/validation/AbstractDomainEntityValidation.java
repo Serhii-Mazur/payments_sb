@@ -1,7 +1,5 @@
 package mono.it.school.payments.validation;
 
-import mono.it.school.payments.domain.AbstractDomainEntity;
-
 public abstract class AbstractDomainEntityValidation {
     private static final String EMPTY_STRING = "";
     private static final String FIELD_NAME_PATTERN = "field_name";

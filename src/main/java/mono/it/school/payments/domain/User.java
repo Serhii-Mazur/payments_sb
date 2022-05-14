@@ -3,7 +3,7 @@ package mono.it.school.payments.domain;
 import lombok.*;
 
 @Data
-public class User extends AbstractDomainEntity {
+public class User {
 
     @NonNull
     private final String fullName;
