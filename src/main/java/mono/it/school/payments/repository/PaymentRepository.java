@@ -14,4 +14,6 @@ public interface PaymentRepository {
     Payment getById(UUID id);
 
     List<Payment> getByStatus(PaymentStatus status);
+
+    Payment getByTemplateIDAndDescription(UUID templateID, String description);
 }

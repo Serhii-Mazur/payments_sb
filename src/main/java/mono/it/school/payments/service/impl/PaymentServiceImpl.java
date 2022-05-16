@@ -1,5 +1,6 @@
 package mono.it.school.payments.service.impl;
 
+import lombok.SneakyThrows;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.repository.PaymentRepository;
@@ -20,7 +21,25 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment save(Payment payment) { //TODO: Rewrite method to return boolean
+    @SneakyThrows
+    public Payment save(Payment payment) {
+        if (exists(payment)) {
+            throw new PaymentServiceException("Payment with such parameters [" +
+                    payment.getDescription() + " | " + payment.getTemplateID() +
+                    "] is already exists!");
+        }
+        return paymentRepository.save(payment);
+    }
+
+    @Override
+    @SneakyThrows
+    public Payment update(Payment payment) {
+        if (!exists(payment)) {
+            throw new PaymentServiceException("Payment with such parameters [" +
+                    payment.getPaymentID() + " | " + payment.getDescription() + " | " + payment.getTemplateID() +
+                    "] does not exist!");
+        }
+
         return paymentRepository.save(payment);
     }
 
@@ -34,5 +53,42 @@ public class PaymentServiceImpl implements PaymentService {
     public List<Payment> getAll() {
 
         return paymentRepository.getAll();
+    }
+
+    private boolean exists(Payment payment) {
+        boolean result = false;
+        Payment paymentfromDB = paymentRepository.getByTemplateIDAndDescription(payment.getTemplateID(), payment.getDescription());
+        if (paymentfromDB != null) {
+            if (payment.getPaymentID() != null) {
+                if (payment.getPaymentID().equals(paymentfromDB.getPaymentID())
+                        && payment.getTemplateID().equals(paymentfromDB.getTemplateID())
+                        && payment.getDescription().equals(paymentfromDB.getDescription())) {
+                    result = true;
+                }
+            } else if (payment.getTemplateID().equals(paymentfromDB.getTemplateID())
+                    && payment.getDescription().equals(paymentfromDB.getDescription())) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    public class PaymentServiceException extends Exception {
+        public PaymentServiceException() {
+            super();
+        }
+
+        public PaymentServiceException(String message) {
+            super(message);
+        }
+
+        public PaymentServiceException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public PaymentServiceException(Throwable cause) {
+            super(cause);
+        }
     }
 }

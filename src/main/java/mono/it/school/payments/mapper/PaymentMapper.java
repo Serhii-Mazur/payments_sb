@@ -23,6 +23,7 @@ public class PaymentMapper {
                 createdDateTime = payment.getCreatedDateTime();
             }
             paymentEntity = new PaymentEntity(UUID.randomUUID(),
+                    payment.getDescription(),
                     payment.getTemplateID(),
                     payment.getCardNumber(),
                     payment.getPaymentAmount(),
@@ -31,6 +32,7 @@ public class PaymentMapper {
                     etlDateTime);
         } else {
             paymentEntity = new PaymentEntity(payment.getPaymentID(),
+                    payment.getDescription(),
                     payment.getTemplateID(),
                     payment.getCardNumber(),
                     payment.getPaymentAmount(),
@@ -45,6 +47,7 @@ public class PaymentMapper {
     public static Payment entityToPayment(PaymentEntity paymentEntity) {
 
         return new Payment(paymentEntity.getPaymentID(),
+                paymentEntity.getDescription(),
                 paymentEntity.getTemplateID(),
                 paymentEntity.getCardNumber(),
                 paymentEntity.getPaymentAmount(),

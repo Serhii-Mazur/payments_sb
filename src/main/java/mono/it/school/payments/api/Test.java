@@ -1,10 +1,8 @@
 package mono.it.school.payments.api;
 
-import mono.it.school.payments.constants.PaymentStatus;
-import mono.it.school.payments.domain.User;
-import mono.it.school.payments.entity.PaymentEntity;
-import mono.it.school.payments.entity.UserEntity;
+import mono.it.school.payments.entity.TemplateEntity;
 import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
+import mono.it.school.payments.repository.jpa.JpaTemplateRepository;
 import mono.it.school.payments.repository.jpa.JpaUserRepository;
 import mono.it.school.payments.service.AddressService;
 import mono.it.school.payments.service.PaymentService;
@@ -15,7 +13,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.UUID;
 
 @Component
 //@NoArgsConstructor
@@ -26,15 +24,17 @@ public class Test {
     private final TemplateService templateService;
     private final PaymentService paymentService;
     private final JpaUserRepository jpaUserRepository;
+    private final JpaTemplateRepository jpaTemplateRepository;
     private final JpaPaymentRepository jpaPaymentRepository;
 
     @Autowired
-    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService, JpaUserRepository jpaUserRepository, JpaPaymentRepository jpaPaymentRepository) {
+    public Test(UserService userService, AddressService addressService, TemplateService templateService, PaymentService paymentService, JpaUserRepository jpaUserRepository, JpaTemplateRepository jpaTemplateRepository, JpaPaymentRepository jpaPaymentRepository) {
         this.userService = userService;
         this.addressService = addressService;
         this.templateService = templateService;
         this.paymentService = paymentService;
         this.jpaUserRepository = jpaUserRepository;
+        this.jpaTemplateRepository = jpaTemplateRepository;
         this.jpaPaymentRepository = jpaPaymentRepository;
     }
 
@@ -43,8 +43,10 @@ public class Test {
     private void eventTest() {
         System.out.println("Application started!");
 
-        List<User> all = userService.getAll();
-        System.out.println(all.size());
+        TemplateEntity template = jpaTemplateRepository.findByTemplateNameAndAddressID("test", UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"));
+        System.out.println(template.getTemplateID());
+//        List<User> all = userService.getAll();
+//        System.out.println(all.size());
 
 //        userService.save(new User("test", "test", "test"));
 

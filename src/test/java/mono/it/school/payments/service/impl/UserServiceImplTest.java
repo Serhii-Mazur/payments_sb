@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -35,16 +35,17 @@ class UserServiceImplTest {
     }
 
     @Test
-    void save_ShouldReturnUserIfUserSaved() {
+    void save_ShouldReturnUserIfSaved() {
         User user = new User("Serhii Mazur",
                 "qwerty@cmail.com",
                 "+380456123789");
 
-        doReturn(null).when(userRepository).getByEmail(user.getEmail());
+        doReturn(null).when(userRepository).getByEmail(eq("qwerty@cmail.com"));
         doReturn(user).when(userRepository).save(user);
 
         User actual = userService.save(user);
 
+        verify(userRepository, times(1)).getByEmail(any());
         assertThat(actual.getFullName()).isEqualTo("Serhii Mazur");
         assertThat(actual.getEmail()).isEqualTo("qwerty@cmail.com");
         assertThat(actual.getPhoneNumber()).isEqualTo("+380456123789");
@@ -65,16 +66,17 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update_ShouldReturnUserIfUserUpdated() {
+    void update_ShouldReturnUserIfUpdated() {
         User user = new User("Serhii Mazur",
                 "qwerty@cmail.com",
                 "+380456123789");
 
-        doReturn(user).when(userRepository).getByEmail(user.getEmail());
+        doReturn(user).when(userRepository).getByEmail(eq("qwerty@cmail.com"));
         doReturn(user).when(userRepository).save(user);
 
         User actual = userService.update(user);
 
+        verify(userRepository, times(1)).getByEmail(any());
         assertThat(actual.getFullName()).isEqualTo("Serhii Mazur");
         assertThat(actual.getEmail()).isEqualTo("qwerty@cmail.com");
         assertThat(actual.getPhoneNumber()).isEqualTo("+380456123789");
@@ -86,7 +88,7 @@ class UserServiceImplTest {
                 "qwerty@cmail.com",
                 "+380456123789");
 
-        doReturn(null).when(userRepository).getByEmail(user.getEmail());
+        doReturn(null).when(userRepository).getByEmail(eq("qwerty@cmail.com"));
 
         UserServiceImpl.UserServiceException thrown = assertThrows(UserServiceImpl.UserServiceException.class,
                 () -> userService.update(user));
@@ -94,14 +96,15 @@ class UserServiceImplTest {
         assertNotNull(thrown.getMessage());
     }
 
-    @ParameterizedTest
-    @MethodSource("getEmptyUserList")
-    void getAll_ShouldReturnEmptyUserList(List<User> emptyUserList) {
+    @Test
+    void getAll_ShouldReturnEmptyUserList() {
+        List<User> emptyUserList = Collections.EMPTY_LIST;
 
         doReturn(emptyUserList).when(userRepository).getAll();
         List<User> actual = userService.getAll();
 
-        assertThat(actual.isEmpty());
+        verify(userRepository, times(1)).getAll();
+        assertTrue(actual.isEmpty());
     }
 
     @ParameterizedTest
@@ -112,23 +115,11 @@ class UserServiceImplTest {
 
         List<User> actual = userService.getAll();
 
+        verify(userRepository, times(1)).getAll();
         assertFalse(actual.isEmpty());
         assertThat(actual.size()).isEqualTo(existingUsers.size());
-//        assertThat(actual.size()).isEqualTo(3);
     }
 
-    private static Stream<Arguments> getEmptyUserList() {
-
-        return Stream.of(Arguments.of(Collections.EMPTY_LIST));
-    }
-
-//    private static Stream<Arguments> getSingleUser() {
-//
-//        return Stream.of(Arguments.of(new User("Serhii Mazur",
-//                "qwerty@cmail.com",
-//                "+380456123789")));
-//    }
-//
     private static Stream<Arguments> getUsers() {
         List<User> userList = new ArrayList<>();
         userList.add(new User("John Doe",

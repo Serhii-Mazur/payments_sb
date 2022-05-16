@@ -6,6 +6,7 @@ import mono.it.school.payments.validation.AddressValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -19,14 +20,11 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-//    @PostMapping("/address/add")
-//    public String addAddress(
-//            @RequestParam("address") String address,
-//            @RequestParam("e_mail") String eMail) {
-//        addressService.save(new Address(null, address, eMail));
-//
-//        return "return/add";
-//    }
+    @GetMapping("/all")
+    @ResponseBody
+    public void getAllAddresses(Model model) {
+        model.addAttribute("allAddresses", addressService.getAll());
+    }
 
     @PostMapping("/add")
     @ResponseBody

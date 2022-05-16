@@ -59,6 +59,7 @@ public class PaymentProcessor {
             switch (status) {
                 case 1:
                     result = new Payment(payment.getPaymentID(),
+                            payment.getDescription(),
                             payment.getTemplateID(),
                             payment.getCardNumber(),
                             payment.getPaymentAmount(),
@@ -68,6 +69,7 @@ public class PaymentProcessor {
                     break;
                 case 2:
                     result = new Payment(payment.getPaymentID(),
+                            payment.getDescription(),
                             payment.getTemplateID(),
                             payment.getCardNumber(),
                             payment.getPaymentAmount(),

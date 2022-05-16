@@ -60,8 +60,13 @@ public class AddressServiceImpl implements AddressService {
     private boolean exists(Address address) {
         boolean result = false;
         Address addressFromDb = addressRepository.getByAddress(address.getAddress());
-        if (address.getAddressID() != null) {
-            if (address.getAddressID().equals(addressFromDb.getAddressID())) {
+        if (addressFromDb != null) {
+            if (address.getAddressID() != null) {
+                if (address.getAddressID().equals(addressFromDb.getAddressID())
+                        && address.getAddress().equals(addressFromDb.getAddress())) {
+                    result = true;
+                }
+            } else if (address.getAddress().equals(addressFromDb.getAddress())) {
                 result = true;
             }
         }

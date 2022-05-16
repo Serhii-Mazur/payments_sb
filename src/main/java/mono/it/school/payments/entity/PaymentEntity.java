@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,33 +25,39 @@ public class PaymentEntity {
     @Getter
     private UUID paymentID;
 
+    @Column(name = "description")
+    @Getter
+    @NotEmpty
+    private String description;
+
     @Column(name = "template_id")
     @Getter
-    @NonNull
+    @NotEmpty
     private UUID templateID;
 
     @Column(name = "card_number")
     @Getter
+    @NotEmpty
     private long cardNumber;
 
     @Column(name = "payment_amount")
     @Getter
+    @NotEmpty
     private float paymentAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
-//    @Type(type = "pgsql_enum")
     @Getter
-    @NonNull
+    @NotEmpty
     private PaymentStatus paymentStatus;
 
     @Column(name = "created_date_time")
     @Getter
-    @NonNull
+    @NotEmpty
     private LocalDateTime createdDateTime;
 
     @Column(name = "etl_date_time")
     @Getter
-    @NonNull
+    @NotEmpty
     private LocalDateTime etlDateTime;
 }

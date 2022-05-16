@@ -5,6 +5,7 @@ import mono.it.school.payments.service.UserService;
 import mono.it.school.payments.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -18,29 +19,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    //  Not understand it
-//    @PostMapping("/user/add")
-//    @ResponseBody()
-//    public User addUser(User user) {
-//        userService.save(user);
-//
-//        return user;
-//    }
+    @GetMapping("/all")
+    @ResponseBody
+    public void getAllUsers(Model model) {
+        model.addAttribute("allUsers", userService.getAll());
+    }
 
-    //  It works
     @PostMapping("/add")
     @ResponseBody
-//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addUser(User user) {
         if (UserValidation.validate(user)) {
             userService.save(user);
         }
     }
-
-//    @PostMapping("/user/add")
-//    public String addUser(User user) {
-//        userService.save(user);
-//
-//        return "user";
-//    }
 }

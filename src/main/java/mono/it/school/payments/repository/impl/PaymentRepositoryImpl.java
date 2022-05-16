@@ -54,4 +54,10 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                 .map(PaymentMapper::entityToPayment)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Payment getByTemplateIDAndDescription(UUID templateID, String description) {
+
+        return PaymentMapper.entityToPayment(jpaPaymentRepository.findByTemplateIDAndDescription(templateID, description));
+    }
 }

@@ -18,6 +18,7 @@
 		<flyway.version>8.5.10</flyway.version>
 		<testcontainers.version>1.17.1</testcontainers.version>
 		<hibernate-types.version>2.16.2</hibernate-types.version>
+		<hibernate-validator.version>7.0.4.Final</hibernate-validator.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -32,6 +33,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.postgresql</groupId>

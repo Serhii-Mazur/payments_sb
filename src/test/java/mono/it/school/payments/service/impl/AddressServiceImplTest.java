@@ -1,7 +1,6 @@
 package mono.it.school.payments.service.impl;
 
 import mono.it.school.payments.domain.Address;
-import mono.it.school.payments.domain.User;
 import mono.it.school.payments.repository.AddressRepository;
 import mono.it.school.payments.service.AddressService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +20,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AddressServiceImplTest {
@@ -36,78 +36,89 @@ class AddressServiceImplTest {
         addressService = new AddressServiceImpl(addressRepository);
     }
 
-    @ParameterizedTest
-    @MethodSource("getSingleAddress")
-    void save_ShouldReturnAddressIfAddressSaved(Address address) {
-        Address addressWithID = new Address(UUID.randomUUID(),
+    @Test
+    void save_ShouldReturnAddressIfAddressSaved() {
+        Address addressToSave = new Address(null,
+                "Address_1",
+                "johndoe@jmail.com");
+        Address savedAddress = new Address(UUID.fromString("5447670c-7b58-435c-b246-ac54f27c6201"),
                 "Address_1",
                 "johndoe@jmail.com");
 
-        doReturn(addressWithID).when(addressRepository).getByAddress(eq("johndoe@jmail.com"));
-        doReturn(addressWithID).when(addressRepository).save(eq(address));
+        doReturn(null).when(addressRepository).getByAddress(eq("Address_1"));
+        doReturn(savedAddress).when(addressRepository).save(eq(addressToSave));
 
-        Address actual = addressService.save(address);
+        Address actual = addressService.save(addressToSave);
 
-        assertThat(actual.getAddress()).isEqualTo("Address_1");
-        assertThat(actual.getUserEmail()).isEqualTo("johndoe@jmail.com");
+        verify(addressRepository, times(1)).getByAddress(any());
+        assertThat(actual.getAddress()).isEqualTo(addressToSave.getAddress());
+        assertThat(actual.getUserEmail()).isEqualTo(addressToSave.getUserEmail());
     }
 
-    @ParameterizedTest
-    @MethodSource("getSingleAddress")
-    void save_ShouldThrowExceptionIfAddressExists(Address address) {
-        Address addressWithID = new Address(UUID.randomUUID(),
+    @Test
+    void save_ShouldThrowExceptionIfAddressExists() {
+        Address addressToSave = new Address(null,
+                "Address_1",
+                "johndoe@jmail.com");
+        Address existingAddress = new Address(UUID.randomUUID(),
                 "Address_1",
                 "johndoe@jmail.com");
 
-        doReturn(addressWithID).when(addressRepository).getByAddress(eq("Address_1"));
+        doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
 
         AddressServiceImpl.AddressServiceException thrown = assertThrows(AddressServiceImpl.AddressServiceException.class,
-                () -> addressService.save(address));
+                () -> addressService.save(addressToSave));
 
+        verify(addressRepository, times(1)).getByAddress(any());
         assertNotNull(thrown.getMessage());
     }
 
     @Test
     void update_ShouldReturnAddressIfAddressUpdated() {
-        Address addressWithID = new Address(UUID.randomUUID(),
+        Address addressToUpdate = new Address(UUID.fromString("5447670c-7b58-435c-b246-ac54f27c6201"),
                 "Address_1",
                 "johndoe@jmail.com");
+        Address existingAddress = new Address(UUID.fromString("5447670c-7b58-435c-b246-ac54f27c6201"),
+                "Address_1",
+                "another@jmail.com"); // Difference here
 
-        doReturn(addressWithID).when(addressRepository).getByAddress(eq("Address_1"));
-        doReturn(addressWithID).when(addressRepository).save(addressWithID);
+        doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
+        doReturn(addressToUpdate).when(addressRepository).save(addressToUpdate);
 
-        Address actual = addressService.update(addressWithID);
+        Address actual = addressService.update(addressToUpdate);
 
-        assertThat(actual.getAddressID()).isEqualTo(addressWithID.getAddressID());
-        assertThat(actual.getAddress()).isEqualTo("Address_1");
-        assertThat(actual.getUserEmail()).isEqualTo("johndoe@jmail.com");
+        verify(addressRepository, times(1)).getByAddress(any());
+        assertThat(actual.getAddressID()).isEqualTo(addressToUpdate.getAddressID());
+        assertThat(actual.getAddress()).isEqualTo(addressToUpdate.getAddress());
+        assertThat(actual.getUserEmail()).isEqualTo(addressToUpdate.getUserEmail());
     }
 
-    @ParameterizedTest
-    @MethodSource("getSingleAddress")
-    void update_ShouldThrowExceptionIfAddressDoesNotExist(Address address) {
-        Address addressWithID = new Address(UUID.randomUUID(),
+    @Test
+    void update_ShouldThrowExceptionIfAddressDoesNotExist() {
+        Address addressToUpdate = new Address(UUID.fromString("5447670c-7b58-435c-b246-ac54f27c6201"),
                 "Address_1",
                 "johndoe@jmail.com");
 
-        doReturn(addressWithID).when(addressRepository).getByAddress(eq("Address_1"));
+        doReturn(null).when(addressRepository).getByAddress(eq("Address_1"));
 
         AddressServiceImpl.AddressServiceException thrown = assertThrows(AddressServiceImpl.AddressServiceException.class,
-                () -> addressService.update(address));
+                () -> addressService.update(addressToUpdate));
 
+        verify(addressRepository, times(1)).getByAddress(any());
         assertNotNull(thrown.getMessage());
     }
 
     @Test
     void getByAddress_ShouldReturnAddressIfAddressExists() {
-        Address address = new Address(UUID.randomUUID(),
+        Address existingAddress = new Address(UUID.randomUUID(),
                 "Address_1",
                 "johndoe@jmail.com");
 
-        doReturn(address).when(addressRepository).getByAddress(eq("Address_1"));
+        doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
 
         Address actual = addressService.getByAddress("Address_1");
 
+        verify(addressRepository, times(1)).getByAddress(any());
         assertThat(actual.getAddress()).isEqualTo("Address_1");
         assertThat(actual.getUserEmail()).isEqualTo("johndoe@jmail.com");
     }
@@ -119,17 +130,19 @@ class AddressServiceImplTest {
 
         Address actual = addressService.getByAddress("Non-existent_Address");
 
+        verify(addressRepository, times(1)).getByAddress(any());
         assertNull(actual);
     }
 
-    @ParameterizedTest
-    @MethodSource("getEmptyAddressList")
-    void getAll_ShouldReturnEmptyAddressList(List<User> emptyAddressList) {
+    @Test
+    void getAll_ShouldReturnEmptyAddressList() {
+        List<Address> emptyAddressList = Collections.EMPTY_LIST;
 
         doReturn(emptyAddressList).when(addressRepository).getAll();
         List<Address> actual = addressService.getAll();
 
-        assertThat(actual.isEmpty());
+        verify(addressRepository, times(1)).getAll();
+        assertTrue(actual.isEmpty());
     }
 
     @ParameterizedTest
@@ -140,22 +153,9 @@ class AddressServiceImplTest {
 
         List<Address> actual = addressService.getAll();
 
+        verify(addressRepository, times(1)).getAll();
         assertFalse(actual.isEmpty());
         assertThat(actual.size()).isEqualTo(existingAddresses.size());
-        assertThat(actual.size()).isEqualTo(3);
-    }
-
-    private static Stream<Arguments> getEmptyAddressList() {
-
-        return Stream.of(Arguments.of(Collections.EMPTY_LIST));
-    }
-
-    private static Stream<Arguments> getSingleAddress() {
-        Address address = new Address(null,
-                "Address_1",
-                "johndoe@jmail.com");
-
-        return Stream.of(Arguments.of(address));
     }
 
     private static Stream<Arguments> getAddressList() {
