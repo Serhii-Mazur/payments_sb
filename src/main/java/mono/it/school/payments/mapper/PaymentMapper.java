@@ -15,44 +15,54 @@ public class PaymentMapper {
         LocalDateTime createdDateTime = LocalDateTime.now();
         LocalDateTime etlDateTime = LocalDateTime.now();
 
-        if (payment.getPaymentID() == null) {
-            if (payment.getPaymentStatus() != PaymentStatus.NEW) {
-                paymentStatus = payment.getPaymentStatus();
-            }
-            if (payment.getCreatedDateTime() != null) {
-                createdDateTime = payment.getCreatedDateTime();
-            }
-            paymentEntity = new PaymentEntity(UUID.randomUUID(),
-                    payment.getDescription(),
-                    payment.getTemplateID(),
-                    payment.getCardNumber(),
-                    payment.getPaymentAmount(),
-                    paymentStatus,
-                    createdDateTime,
-                    etlDateTime);
+        if (payment == null) {
+            paymentEntity = null;
         } else {
-            paymentEntity = new PaymentEntity(payment.getPaymentID(),
-                    payment.getDescription(),
-                    payment.getTemplateID(),
-                    payment.getCardNumber(),
-                    payment.getPaymentAmount(),
-                    paymentStatus,
-                    createdDateTime,
-                    etlDateTime);
+            if (payment.getPaymentID() == null) {
+                if (payment.getPaymentStatus() != PaymentStatus.NEW) {
+                    paymentStatus = payment.getPaymentStatus();
+                }
+                if (payment.getCreatedDateTime() != null) {
+                    createdDateTime = payment.getCreatedDateTime();
+                }
+                paymentEntity = new PaymentEntity(UUID.randomUUID(),
+                        payment.getDescription(),
+                        payment.getTemplateID(),
+                        payment.getCardNumber(),
+                        payment.getPaymentAmount(),
+                        paymentStatus,
+                        createdDateTime,
+                        etlDateTime);
+            } else {
+                paymentEntity = new PaymentEntity(payment.getPaymentID(),
+                        payment.getDescription(),
+                        payment.getTemplateID(),
+                        payment.getCardNumber(),
+                        payment.getPaymentAmount(),
+                        paymentStatus,
+                        createdDateTime,
+                        etlDateTime);
+            }
         }
 
         return paymentEntity;
     }
 
     public static Payment entityToPayment(PaymentEntity paymentEntity) {
+        Payment payment;
+        if (paymentEntity == null) {
+            payment = null;
+        } else {
+            payment = new Payment(paymentEntity.getPaymentID(),
+                    paymentEntity.getDescription(),
+                    paymentEntity.getTemplateID(),
+                    paymentEntity.getCardNumber(),
+                    paymentEntity.getPaymentAmount(),
+                    paymentEntity.getPaymentStatus(),
+                    paymentEntity.getCreatedDateTime(),
+                    paymentEntity.getEtlDateTime());
+        }
 
-        return new Payment(paymentEntity.getPaymentID(),
-                paymentEntity.getDescription(),
-                paymentEntity.getTemplateID(),
-                paymentEntity.getCardNumber(),
-                paymentEntity.getPaymentAmount(),
-                paymentEntity.getPaymentStatus(),
-                paymentEntity.getCreatedDateTime(),
-                paymentEntity.getEtlDateTime());
+        return payment;
     }
 }

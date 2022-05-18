@@ -1,6 +1,8 @@
 package mono.it.school.payments.service.impl;
 
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.repository.PaymentRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Log4j2
 @Service
 public class PaymentServiceImpl implements PaymentService {
 

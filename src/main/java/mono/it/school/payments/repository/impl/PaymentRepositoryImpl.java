@@ -1,5 +1,6 @@
 package mono.it.school.payments.repository.impl;
 
+import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.entity.PaymentEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class PaymentRepositoryImpl implements PaymentRepository {
 

@@ -1,5 +1,6 @@
 package mono.it.school.payments.config;
 
+import mono.it.school.payments.exception.InvalidEntityException;
 import mono.it.school.payments.service.impl.UserServiceImpl;
 import mono.it.school.payments.validation.AbstractDomainEntityValidation;
 import org.springframework.core.NestedExceptionUtils;
@@ -28,10 +29,10 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         return response;
     }
 
-    @ExceptionHandler(UserServiceImpl.UserServiceException.class)
+    @ExceptionHandler(InvalidEntityException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody
-    public Map<String, String> handleUserServiceException(UserServiceImpl.UserServiceException e) {
+    public Map<String, String> handleUserServiceException(InvalidEntityException e) {
 
         Map<String, String> response = new HashMap<>();
         response.put("error", e.getMessage());

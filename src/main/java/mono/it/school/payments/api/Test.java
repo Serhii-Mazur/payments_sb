@@ -1,5 +1,6 @@
 package mono.it.school.payments.api;
 
+import mono.it.school.payments.domain.Address;
 import mono.it.school.payments.entity.TemplateEntity;
 import mono.it.school.payments.repository.jpa.JpaPaymentRepository;
 import mono.it.school.payments.repository.jpa.JpaTemplateRepository;
@@ -13,10 +14,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
-//@NoArgsConstructor
 public class Test {
 
     private final UserService userService;
@@ -42,9 +43,13 @@ public class Test {
     @EventListener(ApplicationReadyEvent.class)
     private void eventTest() {
         System.out.println("Application started!");
+        List<Address> all = addressService.getAll();
+        for (Address address : all) {
+            System.out.println(address.getAddressID());
+        }
 
-        TemplateEntity template = jpaTemplateRepository.findByTemplateNameAndAddressID("test", UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"));
-        System.out.println(template.getTemplateID());
+//        TemplateEntity template = jpaTemplateRepository.findByTemplateNameAndAddressID("test", UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"));
+//        System.out.println(template.getTemplateID());
 //        List<User> all = userService.getAll();
 //        System.out.println(all.size());
 

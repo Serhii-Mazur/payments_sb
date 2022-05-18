@@ -1,5 +1,6 @@
 package mono.it.school.payments.repository.impl;
 
+import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.domain.Template;
 import mono.it.school.payments.mapper.TemplateMapper;
 import mono.it.school.payments.repository.TemplateRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class TemplateRepositoryImpl implements TemplateRepository {
 

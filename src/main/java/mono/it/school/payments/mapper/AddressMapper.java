@@ -9,17 +9,28 @@ public class AddressMapper {
 
     public static AddressEntity addressToEntity(Address address) {
         AddressEntity addressEntity;
-        if (address.getAddressID() == null) {
-            addressEntity = new AddressEntity(UUID.randomUUID(), address.getAddress(), address.getUserEmail());
+        if (address == null) {
+            addressEntity = null;
         } else {
-            addressEntity = new AddressEntity(address.getAddressID(), address.getAddress(), address.getUserEmail());
+            if (address.getAddressID() == null) {
+                addressEntity = new AddressEntity(UUID.randomUUID(), address.getAddress(), address.getUserEmail());
+            } else {
+                addressEntity = new AddressEntity(address.getAddressID(), address.getAddress(), address.getUserEmail());
+            }
+
         }
 
         return addressEntity;
     }
 
     public static Address entityToAddress(AddressEntity addressEntity) {
+        Address address;
+        if (addressEntity == null) {
+            address = new Address(addressEntity.getAddressID(), addressEntity.getAddress(), addressEntity.getUserEmail());
+        } else {
+            address = null;
+        }
 
-        return new Address(addressEntity.getAddressID(), addressEntity.getAddress(), addressEntity.getUserEmail());
+        return address;
     }
 }
