@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -29,35 +30,28 @@ public class UserController {
 
     @GetMapping("/all")
     @ResponseBody
-    public void getAllUsers(Model model) {
-        model.addAttribute("allUsers", userService.getAll());
+    public List<User> getAllUsers() {
+        return userService.getAll();
     }
 
     @SneakyThrows
     @PostMapping("/add")
     @ResponseBody
-    public void addUser(@Valid User user,
-                        BindingResult result,
-                        Model model) {
-        if (result.hasErrors()) {
-            log.warn(new StringBuilder("Attempt to save invalid User:").append("\n")
-                    .append("fullName: ").append(user.getFullName()).append("\n")
-                    .append("email: ").append(user.getEmail()).append("\n")
-                    .append("phoneNumber: ").append(user.getPhoneNumber())
-            );
+    public User addUser(@RequestBody @Valid User user,
+                        BindingResult bindingResult) {
+        User savedUser;
+        if (bindingResult.hasErrors()) {
+            log.warn("Attempt to save invalid User: {}", user);
             throw new InvalidEntityException("Invalid User. One or more fields do not match the requirements.");
         } else {
             long start = System.nanoTime();
-            User savedUser = userService.save(user);
+            savedUser = userService.save(user);
             long end = System.nanoTime();
             if (savedUser != null) {
-                log.info(new StringBuilder("User saved: ").append("\n")
-                        .append(savedUser.getFullName()).append("\n")
-                        .append(savedUser.getEmail()).append("\n")
-                        .append(savedUser.getPhoneNumber()).append("\n")
-                        .append("Operation time: ").append(((end - start) / 1000)).append(" ms"));
+                log.info("User saved: {}\nOperation time: {} ms", savedUser, ((end - start) / 1000));
             }
-            model.addAttribute("savedUser", savedUser);
         }
+
+        return savedUser;
     }
 }

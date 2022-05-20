@@ -35,25 +35,34 @@ public class TemplateController {
 
     @GetMapping("/all")
     @ResponseBody
-    public void getAllTemplates(Model model) {
-        model.addAttribute("allTemplates", templateService.getAll());
+    public List<Template> getAllTemplates() {
+
+        return templateService.getAll();
     }
+
+    @GetMapping("/all/byaddress")
+    @ResponseBody
+    public List<Template> getAllTemplatesByAddressID(@RequestBody UUID addressID) {
+
+        return templateService.getByAddressID(addressID);
+    }
+
 
     @PostMapping("/add")
     @ResponseBody
-    public void addNewTemplate(@RequestParam("template_name") String templateName,
-                               @RequestParam("payment_purpose") String paymentPurpose,
-                               @RequestParam("iban") String iban,
-                               @RequestParam("address") String address,
-                               Model model) {
+    @SneakyThrows
+    public Template addNewTemplate(@RequestBody @Valid Template template,
+                               BindingResult bindingResult) {
+        Template savedTemplate;
+        if (bindingResult.hasErrors()) {
+            log.warn("Attempt to save invalid Template: {}", template);
+            throw new InvalidEntityException("Invalid Template. One or more fields do not match the requirements.");
+        } else {
+            //TODO: Measure the execution time
+            savedTemplate = templateService.save(template);
+            log.info("Template saved: {}", savedTemplate);
+        }
 
-        Template template = new Template(null,
-                addressService.getByAddress(address).getAddressID(),
-                paymentPurpose,
-                templateName,
-                iban);
-
-        templateService.save(template);
-
+        return savedTemplate;
     }
 }

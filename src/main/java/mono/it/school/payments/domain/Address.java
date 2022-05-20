@@ -1,6 +1,6 @@
 package mono.it.school.payments.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,16 +8,26 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
-@Data
+//@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Address {
 
-    private final UUID addressID;
+    private UUID addressID;
 
     @NotBlank
     @Size(min = 6, message = "Address must have more then 5 symbols")
-    private final String address;
+    private String address;
 
     @NotBlank
     @Email
-    private final String userEmail;
+    private String userEmail;
+
+    public Address(String address, String userEmail) {
+        this.address = address;
+        this.userEmail = userEmail;
+    }
 }

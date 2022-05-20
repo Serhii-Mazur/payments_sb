@@ -14,5 +14,7 @@ public interface TemplateRepository {
 
     Template getByTemplateName(String templateName);
 
+    <List> java.util.List<Template> getByAddressID(UUID addressID);
+
     Template getByTemplateNameAndAddressId(String templateName, UUID addressId);
 }

@@ -50,6 +50,12 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
+    public List<Template> getByAddressID(UUID addressID) {
+
+        return templateRepository.getByAddressID(addressID);
+    }
+
+    @Override
     public Template getByTemplateName(String templateName) {
 
         return templateRepository.getByTemplateName(templateName);

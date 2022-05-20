@@ -8,6 +8,7 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.beans.BeanProperty;
@@ -16,8 +17,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class ConfigurerAdapter implements WebMvcConfigurer {
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer
+                .ignoreAcceptHeader(false)
+                .defaultContentType(MediaType.APPLICATION_JSON);
+    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -26,6 +34,11 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Bean
     public List<HttpMessageConverter<?>> createMessageConverters() {
+//        List<MediaType> types = new ArrayList<>();
+//        types.add(MediaType.APPLICATION_JSON);
+//        types.add(MediaType.TEXT_PLAIN);
+//        types.add(MediaType.TEXT_HTML);
+
         MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         jackson2HttpMessageConverter.setObjectMapper(new ObjectMapper());
         jackson2HttpMessageConverter.setSupportedMediaTypes(
@@ -33,8 +46,9 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
                         MediaType.TEXT_HTML,
                         MediaType.TEXT_PLAIN));
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new ByteArrayHttpMessageConverter());
+//        converters.add(new ByteArrayHttpMessageConverter());
         converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        converters.add(jackson2HttpMessageConverter);
 
         return converters;
     }

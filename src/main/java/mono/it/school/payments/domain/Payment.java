@@ -2,32 +2,45 @@ package mono.it.school.payments.domain;
 
 import lombok.*;
 import mono.it.school.payments.constants.PaymentStatus;
+import mono.it.school.payments.validation.annotation.ValidCardNumber;
+import mono.it.school.payments.validation.annotation.ValidUuid;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Payment {
 
-    private final UUID paymentID;
+    private UUID paymentID;
 
-    @Getter
     @NotEmpty(message = "Description may not be empty")
-    private final String description;
+    private String description;
 
-    @NotEmpty(message = "Template[ID] may not be empty")
-    private final UUID templateID;
+    @ValidUuid
+    private UUID templateID;
 
-    @NotEmpty(message = "CardNumber may not be empty")
-    private final long cardNumber;
+    @ValidCardNumber
+    private String cardNumber;
 
-    @NotEmpty(message = "Amount may not be empty")
-    private final float paymentAmount;
+//    @NotEmpty(message = "Amount may not be empty")
+    private float paymentAmount;
 
-    private final PaymentStatus paymentStatus;
+    @Setter
+    private PaymentStatus paymentStatus;
 
-    private final LocalDateTime createdDateTime;
+    private LocalDateTime createdDateTime;
 
-    private final LocalDateTime etlDateTime;
+    private LocalDateTime etlDateTime;
+
+    public Payment(String description, UUID templateID, String cardNumber, float paymentAmount) {
+        this.description = description;
+        this.templateID = templateID;
+        this.cardNumber = cardNumber;
+        this.paymentAmount = paymentAmount;
+    }
 }

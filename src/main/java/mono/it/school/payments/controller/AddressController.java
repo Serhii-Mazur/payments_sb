@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -27,34 +28,36 @@ public class AddressController {
 
     @GetMapping("/all")
     @ResponseBody
-    public void getAllAddresses(Model model) {
-        model.addAttribute("allAddresses", addressService.getAll());
+    public List<Address> getAllAddresses() {
+
+        return addressService.getAll();
+    }
+
+    @GetMapping("/all/byuser")
+    @ResponseBody
+    public List<Address> getAllAddressesByUser(@RequestBody String userEmail) {
+
+        return addressService.getByUserEmail(userEmail);
     }
 
     @SneakyThrows
     @PostMapping("/add")
     @ResponseBody
-    public void addAddress(@Valid Address address,
-                           BindingResult result,
-                           Model model) {
-        if (result.hasErrors()) {
-            log.warn(new StringBuilder("Attempt to save invalid Address:").append("\n")
-                    .append("Address: ").append(address.getAddress()).append("\n")
-                    .append("UserEmail: ").append(address.getUserEmail()).append("\n")
-            );
+    public Address addAddress(@RequestBody @Valid Address address,
+                           BindingResult bindingResult) {
+        Address savedAddress;
+        if (bindingResult.hasErrors()) {
+            log.warn("Attempt to save invalid Address: {}", address);
             throw new InvalidEntityException("Invalid Address. One or more fields do not match the requirements.");
         } else {
             long start = System.nanoTime();
-            Address savedAddress = addressService.save(address);
+            savedAddress = addressService.save(address);
             long end = System.nanoTime();
             if (savedAddress != null) {
-                log.info(new StringBuilder("Address saved: ").append("\n")
-                        .append(savedAddress.getAddressID()).append("\n")
-                        .append(savedAddress.getAddress()).append("\n")
-                        .append(savedAddress.getUserEmail()).append("\n")
-                        .append("Operation time: ").append(((end - start) / 1000)).append(" ms"));
+                log.info("Address saved: {}", savedAddress);
             }
-            model.addAttribute("savedAddress", savedAddress);
         }
+
+        return savedAddress;
     }
 }

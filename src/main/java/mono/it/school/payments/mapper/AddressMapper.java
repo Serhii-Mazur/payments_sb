@@ -26,9 +26,9 @@ public class AddressMapper {
     public static Address entityToAddress(AddressEntity addressEntity) {
         Address address;
         if (addressEntity == null) {
-            address = new Address(addressEntity.getAddressID(), addressEntity.getAddress(), addressEntity.getUserEmail());
-        } else {
             address = null;
+        } else {
+            address = new Address(addressEntity.getAddressID(), addressEntity.getAddress(), addressEntity.getUserEmail());
         }
 
         return address;

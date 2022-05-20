@@ -1,24 +1,39 @@
 package mono.it.school.payments.domain;
 
 import lombok.*;
+import mono.it.school.payments.validation.annotation.ValidIbanUa;
+import mono.it.school.payments.validation.annotation.ValidUuid;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Template {
 
-    private final UUID templateID;
+    private UUID templateID;
 
-    @NotEmpty(message = "Address[ID] may not be empty")
-    private final UUID addressID;
+    @ValidUuid
+    private UUID addressID;
 
-    @NotEmpty(message = "PaymentPurpose may not be empty")
-    private final String paymentPurpose;
+    @NotBlank(message = "PaymentPurpose must not be empty")
+    private String paymentPurpose;
 
-    @NotEmpty(message = "TemplateName may not be empty")
-    private final String templateName;
+    @NotBlank(message = "TemplateName must not be empty")
+    private String templateName;
 
-    @NotEmpty(message = "IBAN may not be empty")
-    private final String iban;
+    @ValidIbanUa
+    private String iban;
+
+    public Template(UUID addressID, String paymentPurpose, String templateName, String iban) {
+        this.addressID = addressID;
+        this.paymentPurpose = paymentPurpose;
+        this.templateName = templateName;
+        this.iban = iban;
+    }
 }

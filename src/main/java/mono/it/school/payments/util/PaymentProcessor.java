@@ -5,80 +5,54 @@ import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 @Log4j2
 @Service
 @EnableAsync
 public class PaymentProcessor {
 
+    private final String STATUS_GENERATOR_URL = "http://localhost:8080/payment/handle";
     private final PaymentService paymentService;
+    private final RestTemplate restTemplate;
+    private final HttpHeaders httpHeaders;
 
     @Autowired
-    public PaymentProcessor(PaymentService paymentService) {
+    public PaymentProcessor(PaymentService paymentService, RestTemplate restTemplate, HttpHeaders httpHeaders) {
         this.paymentService = paymentService;
+        this.restTemplate = restTemplate;
+        this.httpHeaders = httpHeaders;
     }
 
-    @Scheduled(cron = "${cron.everysecond.bankdays}")
+    @Scheduled(cron = "${cron.every.sec.bankdays}")
     public void execute() {
-//        handleNewPayments();
+        handleNewPayments();
     }
 
-    @Async
-    public List<Payment> handleNewPayments() {
+    synchronized public List<Payment> handleNewPayments() {
         List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW);
         List<Payment> handledPayments = new ArrayList<>();
 
-//        for (Payment payment : newPayments) {
-//            Payment handledPayment = generateNewStatus(payment);
-//            if (handledPayment.getPaymentStatus() != PaymentStatus.NEW) {
-//                handledPayments.add(paymentService.save(handledPayment));
-//            }
-//        }
+        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        return handledPayments;
-    }
-
-    private Payment generateNewStatus(Payment payment) {
-        Random random = new Random();
-        Payment result = payment;
-        LocalDateTime createdDateTime = payment.getCreatedDateTime();
-        long lag = ChronoUnit.SECONDS.between(createdDateTime, LocalDateTime.now().withNano(0));
-
-        if (lag > 2) {
-            int status = random.nextInt(3);
-            switch (status) {
-                case 1:
-                    result = new Payment(payment.getPaymentID(),
-                            payment.getDescription(),
-                            payment.getTemplateID(),
-                            payment.getCardNumber(),
-                            payment.getPaymentAmount(),
-                            PaymentStatus.DONE,
-                            createdDateTime,
-                            null);
-                    break;
-                case 2:
-                    result = new Payment(payment.getPaymentID(),
-                            payment.getDescription(),
-                            payment.getTemplateID(),
-                            payment.getCardNumber(),
-                            payment.getPaymentAmount(),
-                            PaymentStatus.FAILED,
-                            createdDateTime,
-                            null);;
-                    break;
+        for (Payment payment : newPayments) {
+            HttpEntity<String> httpEntity = new HttpEntity(payment, httpHeaders);
+            Payment result = restTemplate.postForObject(STATUS_GENERATOR_URL, httpEntity, Payment.class);
+            if (!result.getPaymentStatus().equals(PaymentStatus.NEW)) {
+                handledPayments.add(paymentService.update(result));
             }
         }
-        return result;
+
+        return handledPayments;
     }
 }

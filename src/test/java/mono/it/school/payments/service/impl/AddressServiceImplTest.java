@@ -38,9 +38,7 @@ class AddressServiceImplTest {
 
     @Test
     void save_ShouldReturnAddressIfAddressSaved() {
-        Address addressToSave = new Address(null,
-                "Address_1",
-                "johndoe@jmail.com");
+        Address addressToSave = new Address("Address_1", "johndoe@jmail.com");
         Address savedAddress = new Address(UUID.fromString("5447670c-7b58-435c-b246-ac54f27c6201"),
                 "Address_1",
                 "johndoe@jmail.com");
@@ -57,12 +55,8 @@ class AddressServiceImplTest {
 
     @Test
     void save_ShouldThrowExceptionIfAddressExists() {
-        Address addressToSave = new Address(null,
-                "Address_1",
-                "johndoe@jmail.com");
-        Address existingAddress = new Address(UUID.randomUUID(),
-                "Address_1",
-                "johndoe@jmail.com");
+        Address addressToSave = new Address("Address_1", "johndoe@jmail.com");
+        Address existingAddress = new Address(UUID.randomUUID(), "Address_1", "johndoe@jmail.com");
 
         doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
 

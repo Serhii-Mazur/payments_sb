@@ -19,9 +19,9 @@ public class PaymentMapper {
             paymentEntity = null;
         } else {
             if (payment.getPaymentID() == null) {
-                if (payment.getPaymentStatus() != PaymentStatus.NEW) {
-                    paymentStatus = payment.getPaymentStatus();
-                }
+//                if (payment.getPaymentStatus() != PaymentStatus.NEW) {
+//                    paymentStatus = payment.getPaymentStatus();
+//                }
                 if (payment.getCreatedDateTime() != null) {
                     createdDateTime = payment.getCreatedDateTime();
                 }
@@ -30,7 +30,7 @@ public class PaymentMapper {
                         payment.getTemplateID(),
                         payment.getCardNumber(),
                         payment.getPaymentAmount(),
-                        paymentStatus,
+                        PaymentStatus.NEW,
                         createdDateTime,
                         etlDateTime);
             } else {
@@ -39,7 +39,7 @@ public class PaymentMapper {
                         payment.getTemplateID(),
                         payment.getCardNumber(),
                         payment.getPaymentAmount(),
-                        paymentStatus,
+                        payment.getPaymentStatus(),
                         createdDateTime,
                         etlDateTime);
             }

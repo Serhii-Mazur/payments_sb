@@ -27,4 +27,9 @@ public class AddressEntity {
     @Getter
     @NonNull
     private String userEmail;
+
+    public AddressEntity(@NonNull String address, @NonNull String userEmail) {
+        this.address = address;
+        this.userEmail = userEmail;
+    }
 }
