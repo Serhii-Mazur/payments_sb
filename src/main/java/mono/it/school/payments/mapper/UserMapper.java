@@ -8,10 +8,8 @@ public class UserMapper {
     public static UserEntity userToEntity(User user) {
         UserEntity userEntity;
         if (user == null) {
-
             userEntity = null;
         } else {
-
             userEntity = new UserEntity(user.getFullName(), user.getEmail(), user.getPhoneNumber());
         }
 
@@ -21,10 +19,8 @@ public class UserMapper {
     public static User entityToUser(UserEntity userEntity) {
         User user;
         if (userEntity == null) {
-
             user = null;
         } else {
-
             user = new User(userEntity.getFullName(), userEntity.getEmail(), userEntity.getPhoneNumber());
         }
 

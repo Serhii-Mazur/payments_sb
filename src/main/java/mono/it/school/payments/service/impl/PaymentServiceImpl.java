@@ -1,7 +1,6 @@
 package mono.it.school.payments.service.impl;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
@@ -27,9 +26,11 @@ public class PaymentServiceImpl implements PaymentService {
     @SneakyThrows
     public Payment save(Payment payment) {
         if (exists(payment)) {
-            throw new PaymentServiceException("Payment with such parameters [" +
-                    payment.getDescription() + " | " + payment.getTemplateID() +
-                    "] is already exists!");
+            log.warn("Attempt to add existing Payment {}", payment);
+            throw new PaymentServiceException(String.format("Payment with such parameters [templateID=%s, description=%s] is already exists!",
+                    payment.getTemplateID(),
+                    payment.getDescription())
+            );
         }
 
         return paymentRepository.save(payment);
@@ -39,9 +40,11 @@ public class PaymentServiceImpl implements PaymentService {
     @SneakyThrows
     public Payment update(Payment payment) {
         if (!exists(payment)) {
-            throw new PaymentServiceException("Payment with such parameters [" +
-                    payment.getPaymentID() + " | " + payment.getDescription() + " | " + payment.getTemplateID() +
-                    "] does not exist!");
+            log.warn("Attempt to update non-existing Payment {}", payment);
+            throw new PaymentServiceException(String.format("Payment with such parameters [templateID=%s, description=%s] does not exist!",
+                    payment.getTemplateID(),
+                    payment.getDescription())
+            );
         }
 
         return paymentRepository.save(payment);

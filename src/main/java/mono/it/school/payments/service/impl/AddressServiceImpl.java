@@ -25,7 +25,8 @@ public class AddressServiceImpl implements AddressService {
     @SneakyThrows
     public Address save(Address address) {
         if (exists(address)) {
-            throw new AddressServiceException("Address with address [" + address.getAddress() + "] is already exists!");
+            log.warn("Attempt to add existing Address {}", address);
+            throw new AddressServiceException(String.format("Address with address [%s] is already exists!", address.getAddress()));
         }
 
         return addressRepository.save(address);
@@ -35,7 +36,8 @@ public class AddressServiceImpl implements AddressService {
     @SneakyThrows
     public Address update(Address address) {
         if (!exists(address)) {
-            throw new AddressServiceException("Address with address [" + address.getAddress() + "] does not exist!");
+            log.warn("Attempt to update non-existing Address {}", address);
+            throw new AddressServiceException(String.format("Address with address [%s] does not exist!", address.getAddress()));
         }
 
         return addressRepository.save(address);
@@ -77,20 +79,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public class AddressServiceException extends Exception {
-        public AddressServiceException() {
-            super();
-        }
-
         public AddressServiceException(String message) {
             super(message);
-        }
-
-        public AddressServiceException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public AddressServiceException(Throwable cause) {
-            super(cause);
         }
     }
 }

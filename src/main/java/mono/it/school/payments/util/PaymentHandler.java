@@ -1,26 +1,38 @@
 package mono.it.school.payments.util;
 
+import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
+@Log4j2
 @Service
 public class PaymentHandler {
-    private final Random random;
 
-    public PaymentHandler() {
+    private final Random random;
+    private final StopWatch timeMeasure;
+
+    public PaymentHandler(StopWatch timeMeasure) {
+        this.timeMeasure = timeMeasure;
         this.random = new Random();
     }
 
     public Payment execute(Payment payment) {
         LocalDateTime createdDateTime = payment.getCreatedDateTime();
         long lag = ChronoUnit.SECONDS.between(createdDateTime, LocalDateTime.now().withNano(0));
-
+        timeMeasure.start("gettingNewPaymentStatus");
         payment.setPaymentStatus(getNewStatus(lag));
+        timeMeasure.stop();
+        if (payment.getPaymentStatus().equals(PaymentStatus.NEW)) {
+            log.info("Payment {} did not receive a new status .\nOperation time: {} ms", payment, timeMeasure.getLastTaskTimeMillis());
+        } else {
+            log.info("Payment {} has got new status.\nOperation time: {} ms", payment, timeMeasure.getLastTaskTimeMillis());
+        }
 
         return payment;
     }

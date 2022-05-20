@@ -27,7 +27,8 @@ public class TemplateServiceImpl implements TemplateService {
     @SneakyThrows
     public Template save(Template template) {
         if (exists(template)) {
-            throw new TemplateServiceException("Template with name [" + template.getTemplateName() + "] is already exists!");
+            log.warn("Attempt to update non-existing Template {}", template);
+            throw new TemplateServiceException(String.format("Template with name [%s] is already exists!", template.getTemplateName()));
         }
 
         return templateRepository.save(template);
@@ -37,7 +38,8 @@ public class TemplateServiceImpl implements TemplateService {
     @SneakyThrows
     public Template update(Template template) {
         if (!exists(template)) {
-            throw new TemplateServiceException("Template with name [" + template.getTemplateName() + "] does not exist!");
+            log.warn("Attempt to update non-existing Template {}", template);
+            throw new TemplateServiceException(String.format("Template with name [%s] does not exist!", template.getTemplateName()));
         }
 
         return templateRepository.save(template);
@@ -85,20 +87,8 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     public class TemplateServiceException extends Exception {
-        public TemplateServiceException() {
-            super();
-        }
-
         public TemplateServiceException(String message) {
             super(message);
-        }
-
-        public TemplateServiceException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public TemplateServiceException(Throwable cause) {
-            super(cause);
         }
     }
 }

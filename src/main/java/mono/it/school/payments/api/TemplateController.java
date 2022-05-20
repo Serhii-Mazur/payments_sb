@@ -1,17 +1,14 @@
-package mono.it.school.payments.controller;
+package mono.it.school.payments.api;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import mono.it.school.payments.domain.Address;
 import mono.it.school.payments.domain.Template;
 import mono.it.school.payments.exception.InvalidEntityException;
-import mono.it.school.payments.service.AddressService;
 import mono.it.school.payments.service.TemplateService;
-import mono.it.school.payments.validation.TemplateValidation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,17 +21,18 @@ import java.util.UUID;
 @RequestMapping(value = "/template")
 public class TemplateController {
 
-    private final AddressService addressService;
     private final TemplateService templateService;
+    private final StopWatch timeMeasure;
 
     @Autowired
-    public TemplateController(AddressService addressService, TemplateService templateService) {
-        this.addressService = addressService;
+    public TemplateController(TemplateService templateService, StopWatch timeMeasure) {
         this.templateService = templateService;
+        this.timeMeasure = timeMeasure;
     }
 
     @GetMapping("/all")
     @ResponseBody
+    @ApiOperation("Get all Templates")
     public List<Template> getAllTemplates() {
 
         return templateService.getAll();
@@ -42,6 +40,7 @@ public class TemplateController {
 
     @GetMapping("/all/byaddress")
     @ResponseBody
+    @ApiOperation("Get all Templates by address (identifier: addressID)")
     public List<Template> getAllTemplatesByAddressID(@RequestBody UUID addressID) {
 
         return templateService.getByAddressID(addressID);
@@ -51,6 +50,7 @@ public class TemplateController {
     @PostMapping("/add")
     @ResponseBody
     @SneakyThrows
+    @ApiOperation("Add new Template")
     public Template addNewTemplate(@RequestBody @Valid Template template,
                                BindingResult bindingResult) {
         Template savedTemplate;
@@ -58,9 +58,10 @@ public class TemplateController {
             log.warn("Attempt to save invalid Template: {}", template);
             throw new InvalidEntityException("Invalid Template. One or more fields do not match the requirements.");
         } else {
-            //TODO: Measure the execution time
+            timeMeasure.start("templateSaving");
             savedTemplate = templateService.save(template);
-            log.info("Template saved: {}", savedTemplate);
+            timeMeasure.stop();
+            log.info("Template saved: {}\nOperation time: {} ms", savedTemplate, timeMeasure.getLastTaskTimeMillis());
         }
 
         return savedTemplate;

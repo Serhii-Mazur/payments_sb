@@ -11,7 +11,6 @@ public class PaymentMapper {
 
     public static PaymentEntity paymentToEntity(Payment payment) {
         PaymentEntity paymentEntity;
-        PaymentStatus paymentStatus = PaymentStatus.NEW;
         LocalDateTime createdDateTime = LocalDateTime.now();
         LocalDateTime etlDateTime = LocalDateTime.now();
 
@@ -19,9 +18,6 @@ public class PaymentMapper {
             paymentEntity = null;
         } else {
             if (payment.getPaymentID() == null) {
-//                if (payment.getPaymentStatus() != PaymentStatus.NEW) {
-//                    paymentStatus = payment.getPaymentStatus();
-//                }
                 if (payment.getCreatedDateTime() != null) {
                     createdDateTime = payment.getCreatedDateTime();
                 }

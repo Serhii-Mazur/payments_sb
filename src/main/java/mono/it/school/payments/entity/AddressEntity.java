@@ -1,8 +1,14 @@
 package mono.it.school.payments.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
@@ -10,26 +16,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Getter
 public class AddressEntity {
 
     @Id
     @Column(name = "id")
-    @Getter
-    @NonNull
     private UUID addressID;
 
     @Column(name = "address")
-    @Getter
-    @NonNull
     private String address;
 
     @Column(name = "user_email")
-    @Getter
-    @NonNull
     private String userEmail;
-
-    public AddressEntity(@NonNull String address, @NonNull String userEmail) {
-        this.address = address;
-        this.userEmail = userEmail;
-    }
 }

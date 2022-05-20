@@ -18,18 +18,14 @@ public class TemplateEntity {
     UUID templateID;
 
     @Column(name = "address_id")
-    @NonNull
     UUID addressID;
 
     @Column(name = "payment_purpose")
-    @NonNull
     String paymentPurpose;
 
     @Column(name = "template_name")
-    @NonNull
     String templateName;
 
     @Column(name = "iban")
-    @NonNull
     String iban;
 }

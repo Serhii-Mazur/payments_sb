@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class PaymentProcessor {
         handleNewPayments();
     }
 
+    @Async
     synchronized public List<Payment> handleNewPayments() {
         List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW);
         List<Payment> handledPayments = new ArrayList<>();
@@ -48,11 +50,16 @@ public class PaymentProcessor {
         for (Payment payment : newPayments) {
             HttpEntity<String> httpEntity = new HttpEntity(payment, httpHeaders);
             Payment result = restTemplate.postForObject(STATUS_GENERATOR_URL, httpEntity, Payment.class);
-            if (!result.getPaymentStatus().equals(PaymentStatus.NEW)) {
+            if (hasNewStatus(result)) {
                 handledPayments.add(paymentService.update(result));
             }
         }
 
         return handledPayments;
+    }
+
+    private boolean hasNewStatus(Payment payment) {
+
+        return !payment.getPaymentStatus().equals(PaymentStatus.NEW);
     }
 }

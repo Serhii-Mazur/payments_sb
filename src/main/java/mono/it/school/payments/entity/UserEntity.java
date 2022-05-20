@@ -1,29 +1,30 @@
 package mono.it.school.payments.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users", schema = "mono")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Getter
 public class UserEntity {
 
     @Column(name = "full_name")
-    @Getter
-    @NonNull
     private String fullName;
 
     @Id
     @Column(name = "email")
-    @Getter
-    @NonNull
     private String email;
 
     @Column(name = "phone_number")
-    @Getter
-    @NonNull
     private String phoneNumber;
 }

@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments", schema = "mono", indexes = {
-        @Index(name = "idx_paymententity", columnList = "payment_status")
-})
+@Table(name = "payments", schema = "mono",
+        indexes = {@Index(name = "idx_paymententity", columnList = "payment_status")}
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode

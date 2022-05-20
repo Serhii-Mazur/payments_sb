@@ -1,7 +1,7 @@
-package mono.it.school.payments.controller;
+package mono.it.school.payments.api;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
-import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.util.PaymentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,9 @@ public class PaymentHandlingController {
 
     @PostMapping(value = "/handle")
     @ResponseBody
+    @ApiOperation("Endpoint of PaymentHandler (separate web-service imitation)")
     public Payment handlePayment(@RequestBody Payment payment) {
-
-//        String response = payment.getDescription();
-//        return payment;
+        log.info("Request to handle payment {} has got", payment);
         return paymentHandler.execute(payment);
     }
-
 }
