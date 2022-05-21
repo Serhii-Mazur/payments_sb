@@ -9,8 +9,6 @@ import java.util.UUID;
 
 public interface JpaTemplateRepository extends JpaRepository<TemplateEntity, UUID> {
 
-    TemplateEntity findByTemplateName(String templateName);
-
     TemplateEntity findByTemplateNameAndAddressID(String templateName, UUID addressId);
 
     List<TemplateEntity> findByAddressID(UUID addressID);

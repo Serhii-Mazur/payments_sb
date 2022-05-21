@@ -16,7 +16,5 @@ public interface TemplateService {
 
     List<Template> getByAddressID(UUID addressID);
 
-    Template getByTemplateName(String templateName);
-
     Template getByTemplateNameAndAddressID(String templateName, UUID addressId);
 }

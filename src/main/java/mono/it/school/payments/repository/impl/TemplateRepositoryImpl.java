@@ -39,18 +39,6 @@ public class TemplateRepositoryImpl implements TemplateRepository {
     }
 
     @Override
-    public Template getById(UUID id) {
-
-        return TemplateMapper.entityToTemplate(jpaTemplateRepository.getById(id));
-    }
-
-    @Override
-    public Template getByTemplateName(String templateName) {
-
-        return TemplateMapper.entityToTemplate(jpaTemplateRepository.findByTemplateName(templateName));
-    }
-
-    @Override
     public List<Template> getByAddressID(UUID addressID) {
 
         return jpaTemplateRepository.findByAddressID(addressID)

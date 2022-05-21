@@ -58,12 +58,6 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public Template getByTemplateName(String templateName) {
-
-        return templateRepository.getByTemplateName(templateName);
-    }
-
-    @Override
     public Template getByTemplateNameAndAddressID(String templateName, UUID addressId) {
 
         return templateRepository.getByTemplateNameAndAddressId(templateName, addressId);
@@ -86,7 +80,7 @@ public class TemplateServiceImpl implements TemplateService {
         return result;
     }
 
-    public class TemplateServiceException extends Exception {
+    public static class TemplateServiceException extends Exception {
         public TemplateServiceException(String message) {
             super(message);
         }

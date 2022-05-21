@@ -103,32 +103,6 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void getByAddress_ShouldReturnAddressIfAddressExists() {
-        Address existingAddress = new Address(UUID.randomUUID(),
-                "Address_1",
-                "johndoe@jmail.com");
-
-        doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
-
-        Address actual = addressService.getByAddress("Address_1");
-
-        verify(addressRepository, times(1)).getByAddress(any());
-        assertThat(actual.getAddress()).isEqualTo("Address_1");
-        assertThat(actual.getUserEmail()).isEqualTo("johndoe@jmail.com");
-    }
-
-    @Test
-    void getByAddress_ShouldReturnNullIfAddressDoesNotExist() {
-
-        doReturn(null).when(addressRepository).getByAddress(eq("Non-existent_Address"));
-
-        Address actual = addressService.getByAddress("Non-existent_Address");
-
-        verify(addressRepository, times(1)).getByAddress(any());
-        assertNull(actual);
-    }
-
-    @Test
     void getAll_ShouldReturnEmptyAddressList() {
         List<Address> emptyAddressList = Collections.EMPTY_LIST;
 
@@ -152,6 +126,57 @@ class AddressServiceImplTest {
         assertThat(actual.size()).isEqualTo(existingAddresses.size());
     }
 
+    @Test
+    void getByAddress_ShouldReturnAddressIfAddressExists() {
+        Address existingAddress = new Address(UUID.randomUUID(),
+                "Address_1",
+                "johndoe@jmail.com");
+
+        doReturn(existingAddress).when(addressRepository).getByAddress(eq("Address_1"));
+
+        Address actual = addressService.getByAddress("Address_1");
+
+        verify(addressRepository, times(1)).getByAddress(any());
+        assertThat(actual.getAddress()).isEqualTo("Address_1");
+        assertThat(actual.getUserEmail()).isEqualTo("johndoe@jmail.com");
+    }
+
+    @Test
+    void getByAddress_ShouldReturnNullIfAddressDoesNotExist() {
+
+        doReturn(null).when(addressRepository).getByAddress(any());
+
+        Address actual = addressService.getByAddress("Non-existent_Address");
+
+        verify(addressRepository, times(1)).getByAddress(any());
+        assertNull(actual);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAddressListByUserEmail")
+    void getByUserEmail_ShouldReturnAddressList(List<Address> existingAddresses) {
+
+        doReturn(existingAddresses).when(addressRepository).getByUserEmail(eq("johndoe@jmail.com"));
+
+        List<Address> actual = addressService.getByUserEmail("johndoe@jmail.com");
+
+        verify(addressRepository, times(1)).getByUserEmail(any());
+        assertFalse(actual.isEmpty());
+        assertThat(actual.size()).isEqualTo(existingAddresses.size());
+    }
+
+    @Test
+    void getByUserEmail_ShouldReturnEmptyList() {
+        List<Address> emptyList = Collections.EMPTY_LIST;
+
+        doReturn(emptyList).when(addressRepository).getByUserEmail(any());
+
+        List<Address> actual = addressService.getByUserEmail("johndoe@jmail.com");
+
+        verify(addressRepository, times(1)).getByUserEmail(any());
+        assertTrue(actual.isEmpty());
+    }
+
     private static Stream<Arguments> getAddressList() {
         List<Address> addressList = new ArrayList<>();
         addressList.add(new Address(UUID.randomUUID(),
@@ -163,6 +188,18 @@ class AddressServiceImplTest {
         addressList.add(new Address(UUID.randomUUID(),
                 "Address_3",
                 "sconnor@jmail.com"));
+
+        return Stream.of(Arguments.of(addressList));
+    }
+
+    private static Stream<Arguments> getAddressListByUserEmail() {
+        List<Address> addressList = new ArrayList<>();
+        addressList.add(new Address(UUID.randomUUID(),
+                "Address_1",
+                "johndoe@jmail.com"));
+        addressList.add(new Address(UUID.randomUUID(),
+                "Address_2",
+                "johndoe@jmail.com"));
 
         return Stream.of(Arguments.of(addressList));
     }

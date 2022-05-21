@@ -162,6 +162,31 @@ class TemplateServiceImplTest {
         assertThat(actual.size()).isEqualTo(existingTemplates.size());
     }
 
+    @ParameterizedTest
+    @MethodSource("getTemplateListByAddress")
+    void getByAddressID_ShouldReturnTemplateListByAddressID(List<Template> existingTemplates) {
+
+        doReturn(existingTemplates).when(templateRepository).getByAddressID(any());
+
+        List<Template> actual = templateService.getByAddressID(UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"));
+
+        verify(templateRepository, times(1)).getByAddressID(any());
+        assertFalse(actual.isEmpty());
+        assertThat(actual.size()).isEqualTo(existingTemplates.size());
+    }
+
+    @Test
+    void getByAddressID_ShouldReturnEmptyList() {
+        List<Template> emptyList = Collections.EMPTY_LIST;
+
+        doReturn(emptyList).when(templateRepository).getByAddressID(any());
+
+        List<Template> actual = templateService.getByAddressID(UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"));
+
+        verify(templateRepository, times(1)).getByAddressID(any());
+        assertTrue(actual.isEmpty());
+    }
+
     @Test
     void getByTemplateNameAndAddressID_ShouldReturnTemplate() {
         Template templateWithID = new Template(UUID.randomUUID(),
@@ -211,6 +236,22 @@ class TemplateServiceImplTest {
                 "Payment for electric energy Dnipro, Dovga st. 137",
                 "Electricity Dovga",
                 "UA903052992990004149123456789"));
+
+        return Stream.of(Arguments.of(templateList));
+    }
+
+    private static Stream<Arguments> getTemplateListByAddress() {
+        List<Template> templateList = new ArrayList<>();
+        templateList.add(new Template(UUID.randomUUID(),
+                UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"),
+                "Payment for electric energy Kyiv, Korotka st. 39",
+                "Electricity Korotka",
+                "UA903052992990004149123456789"));
+        templateList.add(new Template(UUID.randomUUID(),
+                UUID.fromString("3440d09b-e2d7-47fc-b3b2-fdbf6256e2d8"),
+                "Payment for heating Kyiv, Korotka st. 39",
+                "Heating Korotka",
+                "UA903052992990004149123456791"));
 
         return Stream.of(Arguments.of(templateList));
     }

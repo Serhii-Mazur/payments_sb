@@ -10,11 +10,7 @@ public interface TemplateRepository {
 
     List<Template> getAll();
 
-    Template getById(UUID id);
-
-    Template getByTemplateName(String templateName);
-
-    <List> java.util.List<Template> getByAddressID(UUID addressID);
+    List<Template> getByAddressID(UUID addressID);
 
     Template getByTemplateNameAndAddressId(String templateName, UUID addressId);
 }
