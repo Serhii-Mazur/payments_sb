@@ -1,4 +1,4 @@
-package mono.it.school.payments.util;
+package mono.it.school.payments.service;
 
 import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.constants.PaymentStatus;

@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import mono.it.school.payments.domain.User;
+import mono.it.school.payments.api.dto.UserDto;
 import mono.it.school.payments.exception.InvalidEntityException;
+import mono.it.school.payments.mapper.UserMapper;
 import mono.it.school.payments.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,8 +44,9 @@ public class UserController {
     @PostMapping("/add")
     @ResponseBody
     @ApiOperation("Add new User")
-    public User addUser(@RequestBody @Valid User user,
+    public UserDto addUser(@RequestBody @Valid UserDto userDto,
                         BindingResult bindingResult) {
+        User user = UserMapper.dtoToUser(userDto);
         User savedUser;
         if (bindingResult.hasErrors()) {
             log.warn("Attempt to save invalid User: {}", user);
@@ -57,6 +60,6 @@ public class UserController {
             }
         }
 
-        return savedUser;
+        return UserMapper.userToDto(savedUser);
     }
 }

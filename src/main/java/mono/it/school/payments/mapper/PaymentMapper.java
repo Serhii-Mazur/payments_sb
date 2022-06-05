@@ -1,5 +1,6 @@
 package mono.it.school.payments.mapper;
 
+import mono.it.school.payments.api.dto.PaymentDto;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.entity.PaymentEntity;
@@ -60,5 +61,41 @@ public class PaymentMapper {
         }
 
         return payment;
+    }
+
+    public static Payment dtoToPayment(PaymentDto paymentDto) {
+        Payment payment;
+        if (paymentDto == null) {
+            payment = null;
+        } else {
+            payment = new Payment(paymentDto.getPaymentID(),
+                    paymentDto.getDescription(),
+                    paymentDto.getTemplateID(),
+                    paymentDto.getCardNumber(),
+                    paymentDto.getPaymentAmount(),
+                    paymentDto.getPaymentStatus(),
+                    paymentDto.getCreatedDateTime(),
+                    paymentDto.getEtlDateTime());
+        }
+
+        return payment;
+    }
+
+    public static PaymentDto paymentToDto(Payment payment) {
+        PaymentDto paymentDto;
+        if (payment == null) {
+            paymentDto = null;
+        } else {
+            paymentDto = new PaymentDto(payment.getPaymentID(),
+                    payment.getDescription(),
+                    payment.getTemplateID(),
+                    payment.getCardNumber(),
+                    payment.getPaymentAmount(),
+                    payment.getPaymentStatus(),
+                    payment.getCreatedDateTime(),
+                    payment.getEtlDateTime());
+        }
+
+        return paymentDto;
     }
 }

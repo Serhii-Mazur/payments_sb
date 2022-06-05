@@ -1,4 +1,4 @@
-package mono.it.school.payments.domain;
+package mono.it.school.payments.api.dto;
 
 import lombok.*;
 import mono.it.school.payments.constants.PaymentStatus;
@@ -9,11 +9,12 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-public class Payment {
+public class PaymentDto {
 
     private UUID paymentID;
 
@@ -35,7 +36,7 @@ public class Payment {
 
     private LocalDateTime etlDateTime;
 
-    public Payment(String description, UUID templateID, String cardNumber, float paymentAmount) {
+    public PaymentDto(String description, UUID templateID, String cardNumber, float paymentAmount) {
         this.description = description;
         this.templateID = templateID;
         this.cardNumber = cardNumber;

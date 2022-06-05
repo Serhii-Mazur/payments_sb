@@ -35,12 +35,6 @@ public class PaymentProcessor {
         this.httpHeaders = httpHeaders;
     }
 
-    @Scheduled(cron = "${cron.every.sec.bankdays}")
-    public void execute() {
-        handleNewPayments();
-    }
-
-    @Async
     synchronized public List<Payment> handleNewPayments() {
         List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW);
         List<Payment> handledPayments = new ArrayList<>();
@@ -48,10 +42,14 @@ public class PaymentProcessor {
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         for (Payment payment : newPayments) {
-            HttpEntity<String> httpEntity = new HttpEntity(payment, httpHeaders);
+            HttpEntity<Payment> httpEntity = new HttpEntity<>(payment, httpHeaders);
             Payment result = restTemplate.postForObject(STATUS_GENERATOR_URL, httpEntity, Payment.class);
-            if (hasNewStatus(result)) {
-                handledPayments.add(paymentService.update(result));
+            if (result != null) {
+                if (hasNewStatus(result)) {
+                    handledPayments.add(paymentService.update(result));
+                }
+            } else {
+                log.warn("PaymentHandler service returned null for Payment {}", payment);
             }
         }
 
@@ -61,5 +59,10 @@ public class PaymentProcessor {
     private boolean hasNewStatus(Payment payment) {
 
         return !payment.getPaymentStatus().equals(PaymentStatus.NEW);
+    }
+
+    @Scheduled(cron = "${cron.every.sec.bankdays}")
+    private void execute() {
+        handleNewPayments();
     }
 }

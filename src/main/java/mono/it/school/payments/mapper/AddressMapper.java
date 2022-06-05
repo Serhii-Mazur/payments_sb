@@ -1,5 +1,6 @@
 package mono.it.school.payments.mapper;
 
+import mono.it.school.payments.api.dto.AddressDto;
 import mono.it.school.payments.domain.Address;
 import mono.it.school.payments.entity.AddressEntity;
 
@@ -32,5 +33,27 @@ public class AddressMapper {
         }
 
         return address;
+    }
+
+    public static Address dtoToAddress(AddressDto addressDto) {
+        Address address;
+        if (addressDto == null) {
+            address = null;
+        } else {
+            address = new Address(addressDto.getAddressID(), addressDto.getAddress(), addressDto.getUserEmail());
+        }
+
+        return address;
+    }
+
+    public static AddressDto addressToDto(Address address) {
+        AddressDto addressDto;
+        if (address == null) {
+            addressDto = null;
+        } else {
+            addressDto = new AddressDto(address.getAddressID(), address.getAddress(), address.getUserEmail());
+        }
+
+        return addressDto;
     }
 }

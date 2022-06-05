@@ -1,20 +1,18 @@
-package mono.it.school.payments.domain;
+package mono.it.school.payments.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-public class Address {
+public class AddressDto {
 
     private UUID addressID;
 
@@ -26,7 +24,7 @@ public class Address {
     @Email
     private String userEmail;
 
-    public Address(String address, String userEmail) {
+    public AddressDto(String address, String userEmail) {
         this.address = address;
         this.userEmail = userEmail;
     }

@@ -1,20 +1,18 @@
-package mono.it.school.payments.domain;
+package mono.it.school.payments.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import mono.it.school.payments.validation.annotation.ValidIbanUa;
 import mono.it.school.payments.validation.annotation.ValidUuid;
 
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-public class Template {
+public class TemplateDto {
 
     private UUID templateID;
 
@@ -30,7 +28,7 @@ public class Template {
     @ValidIbanUa
     private String iban;
 
-    public Template(UUID addressID, String paymentPurpose, String templateName, String iban) {
+    public TemplateDto(UUID addressID, String paymentPurpose, String templateName, String iban) {
         this.addressID = addressID;
         this.paymentPurpose = paymentPurpose;
         this.templateName = templateName;
