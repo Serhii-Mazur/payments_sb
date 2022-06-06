@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,13 +32,13 @@ public class PaymentProcessor {
         this.paymentService = paymentService;
         this.restTemplate = restTemplate;
         this.httpHeaders = httpHeaders;
+
+        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     }
 
     synchronized public List<Payment> handleNewPayments() {
         List<Payment> newPayments = paymentService.getByStatus(PaymentStatus.NEW);
         List<Payment> handledPayments = new ArrayList<>();
-
-        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         for (Payment payment : newPayments) {
             HttpEntity<Payment> httpEntity = new HttpEntity<>(payment, httpHeaders);

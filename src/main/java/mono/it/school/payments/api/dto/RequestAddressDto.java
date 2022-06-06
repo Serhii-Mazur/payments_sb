@@ -12,9 +12,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class AddressDto {
-
-    private UUID addressID;
+public class RequestAddressDto {
 
     @NotBlank
     @Size(min = 6, message = "Address must have more then 5 symbols")
@@ -23,9 +21,4 @@ public class AddressDto {
     @NotBlank
     @Email
     private String userEmail;
-
-    public AddressDto(String address, String userEmail) {
-        this.address = address;
-        this.userEmail = userEmail;
-    }
 }

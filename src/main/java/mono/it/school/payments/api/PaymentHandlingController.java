@@ -2,7 +2,8 @@ package mono.it.school.payments.api;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
-import mono.it.school.payments.api.dto.PaymentDto;
+import mono.it.school.payments.api.dto.ResponsePaymentDto;
+import mono.it.school.payments.api.dto.RequestPaymentDto;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.mapper.PaymentMapper;
 import mono.it.school.payments.service.PaymentHandler;
@@ -28,10 +29,10 @@ public class PaymentHandlingController {
     @PostMapping(value = "/handle")
     @ResponseBody
     @ApiOperation("Endpoint of PaymentHandler (separate web-service imitation)")
-    public PaymentDto handlePayment(@RequestBody PaymentDto paymentDto) {
+    public ResponsePaymentDto handlePayment(@RequestBody RequestPaymentDto paymentDto) {
         log.info("Request to handle payment {} has got", paymentDto);
-        Payment payment = PaymentMapper.dtoToPayment(paymentDto);
+        Payment payment = PaymentMapper.requestDtoToPayment(paymentDto);
 
-        return PaymentMapper.paymentToDto(paymentHandler.execute(payment));
+        return PaymentMapper.paymentToResponseDto(paymentHandler.execute(payment));
     }
 }

@@ -1,6 +1,7 @@
 package mono.it.school.payments.mapper;
 
-import mono.it.school.payments.api.dto.PaymentDto;
+import mono.it.school.payments.api.dto.ResponsePaymentDto;
+import mono.it.school.payments.api.dto.RequestPaymentDto;
 import mono.it.school.payments.constants.PaymentStatus;
 import mono.it.school.payments.domain.Payment;
 import mono.it.school.payments.entity.PaymentEntity;
@@ -63,30 +64,26 @@ public class PaymentMapper {
         return payment;
     }
 
-    public static Payment dtoToPayment(PaymentDto paymentDto) {
+    public static Payment requestDtoToPayment(RequestPaymentDto paymentDto) {
         Payment payment;
         if (paymentDto == null) {
             payment = null;
         } else {
-            payment = new Payment(paymentDto.getPaymentID(),
-                    paymentDto.getDescription(),
+            payment = new Payment(paymentDto.getDescription(),
                     paymentDto.getTemplateID(),
                     paymentDto.getCardNumber(),
-                    paymentDto.getPaymentAmount(),
-                    paymentDto.getPaymentStatus(),
-                    paymentDto.getCreatedDateTime(),
-                    paymentDto.getEtlDateTime());
+                    paymentDto.getPaymentAmount());
         }
 
         return payment;
     }
 
-    public static PaymentDto paymentToDto(Payment payment) {
-        PaymentDto paymentDto;
+    public static ResponsePaymentDto paymentToResponseDto(Payment payment) {
+        ResponsePaymentDto responsePaymentDto;
         if (payment == null) {
-            paymentDto = null;
+            responsePaymentDto = null;
         } else {
-            paymentDto = new PaymentDto(payment.getPaymentID(),
+            responsePaymentDto = new ResponsePaymentDto(payment.getPaymentID(),
                     payment.getDescription(),
                     payment.getTemplateID(),
                     payment.getCardNumber(),
@@ -96,6 +93,6 @@ public class PaymentMapper {
                     payment.getEtlDateTime());
         }
 
-        return paymentDto;
+        return responsePaymentDto;
     }
 }

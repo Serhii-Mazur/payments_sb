@@ -12,9 +12,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class TemplateDto {
-
-    private UUID templateID;
+public class RequestTemplateDto {
 
     @ValidUuid
     private UUID addressID;
@@ -27,11 +25,4 @@ public class TemplateDto {
 
     @ValidIbanUa
     private String iban;
-
-    public TemplateDto(UUID addressID, String paymentPurpose, String templateName, String iban) {
-        this.addressID = addressID;
-        this.paymentPurpose = paymentPurpose;
-        this.templateName = templateName;
-        this.iban = iban;
-    }
 }

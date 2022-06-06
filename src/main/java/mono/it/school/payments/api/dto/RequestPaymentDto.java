@@ -14,9 +14,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class PaymentDto {
-
-    private UUID paymentID;
+public class RequestPaymentDto {
 
     @NotEmpty(message = "Description may not be empty")
     private String description;
@@ -28,18 +26,4 @@ public class PaymentDto {
     private String cardNumber;
 
     private float paymentAmount;
-
-    @Setter
-    private PaymentStatus paymentStatus;
-
-    private LocalDateTime createdDateTime;
-
-    private LocalDateTime etlDateTime;
-
-    public PaymentDto(String description, UUID templateID, String cardNumber, float paymentAmount) {
-        this.description = description;
-        this.templateID = templateID;
-        this.cardNumber = cardNumber;
-        this.paymentAmount = paymentAmount;
-    }
 }

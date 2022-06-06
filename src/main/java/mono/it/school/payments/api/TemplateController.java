@@ -3,7 +3,8 @@ package mono.it.school.payments.api;
 import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import mono.it.school.payments.api.dto.TemplateDto;
+import mono.it.school.payments.api.dto.RequestTemplateDto;
+import mono.it.school.payments.api.dto.ResponseTemplateDto;
 import mono.it.school.payments.domain.Template;
 import mono.it.school.payments.exception.InvalidEntityException;
 import mono.it.school.payments.mapper.TemplateMapper;
@@ -36,22 +37,22 @@ public class TemplateController {
     @GetMapping("/all")
     @ResponseBody
     @ApiOperation("Get all Templates")
-    public List<TemplateDto> getAllTemplates() {
+    public List<ResponseTemplateDto> getAllTemplates() {
 
         return templateService.getAll()
                 .stream()
-                .map(TemplateMapper::templateToDto)
+                .map(TemplateMapper::templateToResponseDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/all/byaddress")
     @ResponseBody
     @ApiOperation("Get all Templates by address (identifier: addressID)")
-    public List<TemplateDto> getAllTemplatesByAddressID(@RequestBody UUID addressID) {
+    public List<ResponseTemplateDto> getAllTemplatesByAddressID(@RequestBody UUID addressID) {
 
         return templateService.getByAddressID(addressID)
                 .stream()
-                .map(TemplateMapper::templateToDto)
+                .map(TemplateMapper::templateToResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -60,19 +61,19 @@ public class TemplateController {
     @ResponseBody
     @SneakyThrows
     @ApiOperation("Add new Template")
-    public TemplateDto addNewTemplate(@RequestBody @Valid TemplateDto templateDto,
-                               BindingResult bindingResult) {
+    public ResponseTemplateDto addNewTemplate(@RequestBody @Valid RequestTemplateDto requestTemplateDto,
+                                              BindingResult bindingResult) {
         Template savedTemplate;
         if (bindingResult.hasErrors()) {
-            log.warn("Attempt to save invalid Template: {}", templateDto);
+            log.warn("Attempt to save invalid Template: {}", requestTemplateDto);
             throw new InvalidEntityException("Invalid Template. One or more fields do not match the requirements.");
         } else {
             timeMeasure.start("templateSaving");
-            savedTemplate = templateService.save(TemplateMapper.dtoToTemplate(templateDto));
+            savedTemplate = templateService.save(TemplateMapper.requestDtoToTemplate(requestTemplateDto));
             timeMeasure.stop();
             log.info("Template saved: {}\nOperation time: {} ms", savedTemplate, timeMeasure.getLastTaskTimeMillis());
         }
 
-        return TemplateMapper.templateToDto(savedTemplate);
+        return TemplateMapper.templateToResponseDto(savedTemplate);
     }
 }

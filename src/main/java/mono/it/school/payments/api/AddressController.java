@@ -1,10 +1,10 @@
 package mono.it.school.payments.api;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import mono.it.school.payments.api.dto.AddressDto;
+import mono.it.school.payments.api.dto.ResponseAddressDto;
+import mono.it.school.payments.api.dto.RequestAddressDto;
 import mono.it.school.payments.domain.Address;
 import mono.it.school.payments.exception.InvalidEntityException;
 import mono.it.school.payments.mapper.AddressMapper;
@@ -36,19 +36,22 @@ public class AddressController {
     @GetMapping("/all")
     @ResponseBody
     @ApiOperation("Get all Addresses")
-    public List<Address> getAllAddresses() {
+    public List<ResponseAddressDto> getAllAddresses() {
 
-        return addressService.getAll();
+        return addressService.getAll()
+                .stream()
+                .map(AddressMapper::addressToResponseDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/all/byuser")
     @ResponseBody
     @ApiOperation("Get all Addresses by User (identifier: userEmail)")
-    public List<AddressDto> getAllAddressesByUser(@RequestBody String userEmail) {
+    public List<ResponseAddressDto> getAllAddressesByUser(@RequestBody String userEmail) {
 
         return addressService.getByUserEmail(userEmail)
                 .stream()
-                .map(AddressMapper::addressToDto)
+                .map(AddressMapper::addressToResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -56,21 +59,21 @@ public class AddressController {
     @PostMapping("/add")
     @ResponseBody
     @ApiOperation("Add new Address")
-    public AddressDto addAddress(@RequestBody @Valid AddressDto addressDto,
-                           BindingResult bindingResult) {
+    public ResponseAddressDto addAddress(@RequestBody @Valid RequestAddressDto requestAddressDto,
+                                         BindingResult bindingResult) {
         Address savedAddress;
         if (bindingResult.hasErrors()) {
-            log.warn("Attempt to save invalid Address: {}", addressDto);
+            log.warn("Attempt to save invalid Address: {}", requestAddressDto);
             throw new InvalidEntityException("Invalid Address. One or more fields do not match the requirements.");
         } else {
             timeMeasure.start("addressSaving");
-            savedAddress = addressService.save(AddressMapper.dtoToAddress(addressDto));
+            savedAddress = addressService.save(AddressMapper.requestDtoToAddress(requestAddressDto));
             timeMeasure.stop();
             if (savedAddress != null) {
                 log.info("Address saved: {}\nOperation time: {} ms", savedAddress, timeMeasure.getLastTaskTimeMillis());
             }
         }
 
-        return AddressMapper.addressToDto(savedAddress);
+        return AddressMapper.addressToResponseDto(savedAddress);
     }
 }
