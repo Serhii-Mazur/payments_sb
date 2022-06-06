@@ -1,6 +1,7 @@
 package mono.it.school.payments.mapper;
 
-import mono.it.school.payments.api.dto.TemplateDto;
+import mono.it.school.payments.api.dto.RequestTemplateDto;
+import mono.it.school.payments.api.dto.ResponseTemplateDto;
 import mono.it.school.payments.domain.Template;
 import mono.it.school.payments.entity.TemplateEntity;
 
@@ -46,13 +47,12 @@ public class TemplateMapper {
         return template;
     }
 
-    public static Template dtoToTemplate(TemplateDto templateDto) {
+    public static Template requestDtoToTemplate(RequestTemplateDto templateDto) {
         Template template;
         if (templateDto == null) {
             template = null;
         } else {
-            template = new Template(templateDto.getTemplateID(),
-                    templateDto.getAddressID(),
+            template = new Template(templateDto.getAddressID(),
                     templateDto.getPaymentPurpose(),
                     templateDto.getTemplateName(),
                     templateDto.getIban());
@@ -61,18 +61,18 @@ public class TemplateMapper {
         return template;
     }
 
-    public static TemplateDto templateToDto(Template template) {
-        TemplateDto templateDto;
+    public static ResponseTemplateDto templateToResponseDto(Template template) {
+        ResponseTemplateDto responseTemplateDto;
         if (template == null) {
-            templateDto = null;
+            responseTemplateDto = null;
         } else {
-            templateDto = new TemplateDto(template.getTemplateID(),
+            responseTemplateDto = new ResponseTemplateDto(template.getTemplateID(),
                     template.getAddressID(),
                     template.getPaymentPurpose(),
                     template.getTemplateName(),
                     template.getIban());
         }
 
-        return templateDto;
+        return responseTemplateDto;
     }
 }

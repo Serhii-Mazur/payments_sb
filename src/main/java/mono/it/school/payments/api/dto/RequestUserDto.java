@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserDto {
+public class RequestUserDto {
 
     @NotBlank
     @Size(min = 4, message = "FullName must have more then 3 symbols")
